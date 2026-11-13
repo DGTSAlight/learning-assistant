@@ -1,0 +1,27 @@
+{
+  "skill": "learning-assistant",
+  "version": "0.1.0",
+  "description": "Trigger eval set. Near-miss negatives matter more than obviously unrelated queries; each query should be run at least 3 times before comparing descriptions.",
+  "queries": [
+    { "id": 1, "query": "用 Python 写个脚本筛出日志里的 ERROR 行，我想趁这个把文件读写和正则真正弄明白", "should_trigger": true, "expect_domain": "code", "note": "explicit learning intent with code" },
+    { "id": 2, "query": "我想学点机器学习，但不知道从哪开始", "should_trigger": true, "expect_domain": "general", "note": "vague wish, needs goal proposal" },
+    { "id": 3, "query": "线代上课听得半懂，两周后考试，特征值和相似矩阵一直没真明白", "should_trigger": true, "expect_domain": "general", "note": "shallow prior knowledge, tight deadline" },
+    { "id": 4, "query": "考考我，看看我是不是真的懂了闭包", "should_trigger": true, "expect_domain": "code", "note": "explicit check request" },
+    { "id": 5, "query": "帮我定个学习目标吧，我想把电力电子的几种变换器搞懂到能自己选型", "should_trigger": true, "expect_domain": "general", "note": "explicit goal setting, domain not shipped yet" },
+    { "id": 6, "query": "教我递归，别一上来就把答案全讲了", "should_trigger": true, "expect_domain": "code", "note": "teach me + socratic preference" },
+    { "id": 7, "query": "这个知识点我感觉会了但一做题就错，能不能帮我找出哪里没学懂", "should_trigger": true, "expect_domain": "general", "note": "pseudo-mastery diagnosis" },
+    { "id": 8, "query": "期末速成，三天内把传感器标定这块的常见题型拿下", "should_trigger": true, "expect_domain": "general", "note": "cram framing" },
+    { "id": 9, "query": "带我把这段中断服务程序逐行过一遍，我想理解它为什么这么写", "should_trigger": true, "expect_domain": "code", "note": "understand my code" },
+    { "id": 10, "query": "我学过一点数据结构，但链表和数组的取舍每次都靠猜，想补扎实", "should_trigger": true, "expect_domain": "code", "note": "shallow prior knowledge, wants solid tier" },
+    { "id": 11, "query": "帮我看看这段为什么报 IndexError", "should_trigger": false, "expect_domain": "none", "note": "near miss: fix a bug, no learning intent" },
+    { "id": 12, "query": "把这个函数改成异步的，别改其他部分", "should_trigger": false, "expect_domain": "none", "note": "near miss: pure task execution" },
+    { "id": 13, "query": "跑一下测试，看挂在哪一行", "should_trigger": false, "expect_domain": "none", "note": "near miss: execution request" },
+    { "id": 14, "query": "TCP 三次握手是什么？一句话说清就行", "should_trigger": false, "expect_domain": "none", "note": "near miss: one-off concept question" },
+    { "id": 15, "query": "直接把最终代码给我，不用讲", "should_trigger": false, "expect_domain": "none", "note": "near miss: explicitly answer only" },
+    { "id": 16, "query": "pandas 的 groupby 那个 as_index 参数怎么传", "should_trigger": false, "expect_domain": "none", "note": "near miss: API lookup" },
+    { "id": 17, "query": "帮我把这个文件夹里的笔记按日期整理一下", "should_trigger": false, "expect_domain": "none", "note": "near miss: knowledge-sounding words, no learning" },
+    { "id": 18, "query": "把这段中文翻成英文，术语别改", "should_trigger": false, "expect_domain": "none", "note": "near miss: unrelated text task" },
+    { "id": 19, "query": "给我写一段产品发布的朋友圈文案", "should_trigger": false, "expect_domain": "none", "note": "near miss: unrelated writing task" },
+    { "id": 20, "query": "读一下这个文件，告诉我它有多少行", "should_trigger": false, "expect_domain": "none", "note": "near miss: simple one-step lookup" }
+  ]
+}

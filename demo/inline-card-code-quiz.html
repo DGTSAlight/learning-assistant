@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inline card - code specific example</title>
+<style>
+  body { font-family: system-ui, sans-serif; font-size: 13px; line-height: 1.6; padding: 24px;
+         background: var(--color-background-tertiary, #fafafa); color: var(--color-text-primary, #202020); }
+  .card { max-width: 520px; background: var(--color-background-primary, #ffffff);
+          border: 0.5px solid var(--color-border-tertiary, #d8d8d8);
+          border-radius: var(--border-radius-lg, 12px); padding: 16px 20px; }
+  .eyebrow { margin: 0 0 4px; font-size: 12px; color: var(--color-text-secondary, #666); }
+  .question { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
+  pre { margin: 0 0 12px; padding: 10px 12px; font-size: 12px; overflow-x: auto;
+        background: var(--color-background-secondary, #f4f4f4);
+        border-radius: var(--border-radius-md, 8px); }
+  .options { display: grid; gap: 8px; }
+  button { text-align: left; font-size: 13px; padding: 8px 10px; cursor: pointer;
+           border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+           border-radius: var(--border-radius-md, 8px);
+           background: transparent; color: inherit; font-family: inherit; }
+  button:hover { border-color: var(--color-border-primary, #999); }
+  .feedback { margin: 10px 0 0; font-size: 13px; min-height: 18px; }
+  .hint { margin: 12px 0 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow">Check &middot; Python indexing</p>
+  <p class="question">Which line raises IndexError for a non-empty list <code>items</code>?</p>
+  <pre>items = [10, 20, 30]</pre>
+  <div class="options">
+    <button data-ok="0">A. print(items[0])</button>
+    <button data-ok="1">B. print(items[len(items)])</button>
+    <button data-ok="0">C. print(items[-1])</button>
+  </div>
+  <p class="feedback" id="fb"></p>
+  <button id="more">Ask the assistant to explain why</button>
+  <p class="hint" id="hint"></p>
+</div>
+<script>
+(function () {
+  var fb = document.getElementById('fb');
+  var hint = document.getElementById('hint');
+
+  document.querySelectorAll('[data-ok]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var ok = b.dataset.ok === '1';
+      fb.textContent = ok
+        ? 'Correct. Valid indices are 0 to len(items) - 1.'
+        : 'Not quite. Check the valid index range again.';
+      fb.style.color = ok
+        ? 'var(--color-text-success, #0f6e56)'
+        : 'var(--color-text-danger, #a32d2d)';
+    });
+  });
+
+  document.getElementById('more').addEventListener('click', function () {
+    var prompt = 'Explain why items[len(items)] is out of range, and what a negative ' +
+                 'index means in Python. Then give me one short prediction question.';
+    if (typeof sendPrompt === 'function') {
+      hint.textContent = 'Prompt sent.';
+      sendPrompt(prompt);
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(prompt);
+      hint.textContent = 'Message return is unavailable. Prompt copied to clipboard.';
+    } else {
+      hint.textContent = 'Message return is unavailable. Prompt: ' + prompt;
+    }
+  });
+})();
+</script>
+</body>
+</html>
