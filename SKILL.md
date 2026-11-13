@@ -13,8 +13,8 @@ description: >
   这块我没真懂 / 逐行讲讲 / 我想学 X。
   Not for one-off questions ("what is X", "explain X"), pure task execution (fix this bug,
   run the tests, generate a file, look up an API) with no learning intent, or when the user
-  explicitly asks for the answer only. Code learning is an optional domain; see the
-  selection table in the body.
+  explicitly asks for the answer only. Domain files: code, mathematics, power electronics,
+  sensors; other subjects use the general layer.
 metadata:
   version: "0.1.0"
   scope: general-learning
@@ -56,19 +56,22 @@ installed can still be helped.
 
 ## Selection logic (read the domain file only when needed)
 
-Code learning is an **optional domain**, not the default. Decide from what the user actually
-asked for:
+Domain references are **optional**. The general layer alone is enough to run a session; a
+domain file only adds scope, order, and checks. Decide from what the user actually asked for:
 
 | User intent | Action |
 | --- | --- |
-| Explicitly wants to learn or understand programming, a language, an algorithm's implementation, or code they wrote | Read `references/code-learning.md` in addition to the general rules |
+| Wants to learn or understand programming, a language, an algorithm's implementation, or code they wrote | Read `references/code-learning.md` |
 | Wants code written, fixed, refactored, tested, or explained as a one-off, with no learning intent | Do not read it; handle the task normally |
 | Mentions code but the intent is ambiguous | Ask one short question: "Do you want this done, or do you want to understand how it works?" Then decide |
-| No code involved | Do not read it |
+| Wants to learn mathematics (analysis, linear algebra) | Read `references/mathematics.md` |
+| Wants to learn power electronics | Read `references/power-electronics.md` |
+| Wants to learn sensors or measurement | Read `references/sensors.md` |
+| Any other subject | Use the general layer; do not invent domain rules |
 
-Other domains (mathematics, power electronics, sensors) are **planned but not yet shipped**.
-Do not invent domain rules; use the general layer and ask the user for domain specifics if
-the missing detail blocks progress.
+Read at most one domain file unless the goal genuinely spans two. For a domain file that
+depends on a textbook, ask which textbook and which exam scope **before** using its scope
+section: the default textbook is a fallback, not an assumption.
 
 ## Guard: confirm intent before starting
 
@@ -90,6 +93,9 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | --- | --- |
 | `references/general-learning.md` | Always, once the skill activates |
 | `references/code-learning.md` | Only when the selection table above says so |
+| `references/mathematics.md` | Only when the selection table above says so |
+| `references/power-electronics.md` | Only when the selection table above says so |
+| `references/sensors.md` | Only when the selection table above says so |
 | `references/presentation.md` | When deciding how to present an explanation, diagram, or interactive card |
 | `references/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
 | `references/gates.md` | At a stage end, or when deciding whether to enable hard checks |
