@@ -8,11 +8,13 @@ description: >
   Deliverables: a depth tier, a diagnostic result, practice and checks, mastery records,
   spaced review, and short linked notes.
   Trigger phrases: "teach me", "help me learn", "quiz me", "cram for the exam",
-  "I never really understood this", and Chinese equivalents 教我 / 带我学 / 考考我 /
-  期末速成 / 这块我没真懂 / 我想学 X。
+  "walk me through this code", "why is it written this way",
+  "I never really understood this", and 教我 / 带我学 / 考考我 / 期末速成 /
+  这块我没真懂 / 逐行讲讲 / 我想学 X。
   Not for one-off questions ("what is X", "explain X"), pure task execution (fix this bug,
-  run the tests, generate a file, look up an API), or when the user explicitly asks for the
-  answer only. Code learning is an optional domain; see the selection table in the body.
+  run the tests, generate a file, look up an API) with no learning intent, or when the user
+  explicitly asks for the answer only. Code learning is an optional domain; see the
+  selection table in the body.
 metadata:
   version: "0.1.0"
   scope: general-learning
@@ -74,6 +76,14 @@ This skill is for an ongoing learning process, not for answering questions. If t
 a one-off question, answer it normally and do not start the loop. A false start costs the user
 an unwanted quiz; a confirmation costs one sentence.
 
+## Optional gates
+
+A few critical rules can be enforced as hard checks when the host supports lifecycle hooks.
+This skill does **not** declare `hooks:` in its frontmatter: that only registers for
+`context: fork` skills and needs a security gate enabled. The configuration, environment
+detection, and the degradation ladder (hooks → optional script → document self-check) live
+in `references/gates.md`. A missing gate mechanism never interrupts the session.
+
 ## Resource index — when to read what
 
 | File | Read when |
@@ -82,6 +92,8 @@ an unwanted quiz; a confirmation costs one sentence.
 | `references/code-learning.md` | Only when the selection table above says so |
 | `references/presentation.md` | When deciding how to present an explanation, diagram, or interactive card |
 | `references/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
+| `references/gates.md` | At a stage end, or when deciding whether to enable hard checks |
+| `scripts/check-gates.mjs` | Optional deterministic check at a stage end |
 | `demo/inline-card-basic.html` | Need a domain-neutral interactive card example |
 | `demo/inline-card-code-quiz.html` | Need a code-specific interactive card example |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
