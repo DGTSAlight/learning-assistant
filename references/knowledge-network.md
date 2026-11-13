@@ -45,6 +45,34 @@ Keep an `INDEX.md` that lists the current goal, the depth tier, and links to the
 Relations are links between notes, not a directory tree: prerequisite, easily confused with,
 and transfers-to are the ones worth recording.
 
+## Offering and setting up Obsidian
+
+Obsidian is **off by default**. Ask about it at exactly two moments:
+
+1. When a learning task starts, alongside setting the goal.
+2. When a stage ends and notes are about to be written.
+
+Ask once, in one short question. A "no" stands until the user changes their mind; do not
+ask every turn. If the user wants it but has no Obsidian installed, walk them through it
+instead of assuming:
+
+- **Download** — https://obsidian.md/download has installers for Windows, macOS, and Linux.
+- **Install and launch**, then create or open a **vault** (just a normal folder on disk).
+- **Point the notes at it** — ask for the vault path, or agree on a notes folder inside it.
+  Prefer a path relative to the user's project; never hard-code a machine-specific path.
+- **Optional companion skills** — https://github.com/obsidianmd/obsidian-skills ships
+  `obsidian-markdown` (wikilinks, properties, callouts), `json-canvas` (relation maps),
+  and `obsidian-cli` / `obsidian-headless` (read and write a vault without a GUI). None is
+  required for the plain-Markdown baseline.
+- **Check before claiming** — ask the user or verify that an installation/vault exists.
+  Never assume it is installed, and never say it was configured unless it actually was.
+
+If installation is not possible or not wanted, stay on plain Markdown: no content is lost.
+
+**Notes location.** Notes go into a directory the user chooses. If none is given, ask once;
+a relative `learning-notes/` folder in the current task directory is a usable fallback.
+Notes never go inside the skill directory.
+
 ## Reading format first
 
 The default output must be **plain Markdown that any editor can read**. `[[wikilinks]]` are

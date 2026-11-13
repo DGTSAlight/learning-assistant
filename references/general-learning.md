@@ -142,12 +142,24 @@ Additional rules:
   enough that the user could teach it.
 - Do not repeat an explanation for a mastered point, but do re-test it later (section 8).
 
-**Lower threshold for low-risk knowledge.** A point is low-risk when getting it wrong does
-not affect the goal's correctness, does not involve safety or data loss, and is not a core
-mechanism the rest depends on. For such points, one clear and complete answer plus one
-unprompted recall is enough, and no transfer question is required. This is a working
-default; the user may tighten or loosen it. High-risk and core points always keep the full
-standard.
+**Judge risk and strictness dynamically.** The list below is a rough starting reference, not
+a fixed classification. Decide the threshold per point, at the moment of checking, from:
+
+- how difficult the content is relative to this user's demonstrated level;
+- how familiar the user already is with it (new, shaky, or already solid);
+- what actually happens if they get it wrong — goal correctness, safety, data loss;
+- whether later points depend on this one.
+
+A usable starting reference: for a point that is easy **for this user**, already familiar,
+and whose failure cannot affect the goal, one clear complete answer plus one unprompted
+recall may be enough, with no transfer question. Anything difficult, unfamiliar,
+high-stakes, or foundational keeps the full standard (two independent checks including
+unprompted recall, plus transfer). When in doubt, use the stricter standard.
+
+Say briefly which factors led to the choice so the user can override it, and re-judge when
+new evidence appears — a user who was solid last week may be shaky after a failed review.
+The user may tighten or loosen the standard at any time. Never lower the bar just to save
+turns; lower it because this particular point and this particular user justify it.
 
 Never mark a point as mastered because the user said "I get it". If they explicitly ask to
 skip verification, record it as "self-confirmed, unverified".

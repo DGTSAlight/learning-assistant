@@ -44,6 +44,14 @@ lecturing more.
 
 The loop repeats per knowledge point. Rules for each step live in `references/general-learning.md`.
 
+## Offering the optional note tool
+
+The Obsidian enhancement is **off by default**. Ask about it at exactly two moments: when a
+learning task starts, and when a stage ends. One short question each time is enough; a "no"
+stands until the user changes their mind. Download and setup instructions live in the
+knowledge-network reference indexed below, so a user who wants it but has no Obsidian
+installed can still be helped.
+
 ## Selection logic (read the domain file only when needed)
 
 Code learning is an **optional domain**, not the default. Decide from what the user actually
@@ -73,7 +81,7 @@ an unwanted quiz; a confirmation costs one sentence.
 | `references/general-learning.md` | Always, once the skill activates |
 | `references/code-learning.md` | Only when the selection table above says so |
 | `references/presentation.md` | When deciding how to present an explanation, diagram, or interactive card |
-| `references/knowledge-network.md` | When generating or updating long-term notes |
+| `references/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
 | `demo/inline-card-basic.html` | Need a domain-neutral interactive card example |
 | `demo/inline-card-code-quiz.html` | Need a code-specific interactive card example |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
