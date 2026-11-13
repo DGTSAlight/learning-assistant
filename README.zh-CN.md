@@ -37,11 +37,26 @@ learning-assistant/
 
 ## 安装
 
-把本目录复制到你的 agent 的用户级 skills 目录。WorkBuddy 读取 `~/.workbuddy/skills/`；部分版本与其他 agent 使用 `~/.workbuddy-ai/skills/` 或 `~/.codebuddy/skills/`，以当前 agent 实际读取的那个为准。
+把本目录复制到你的 agent 的用户级 skills 目录；如果只想在单个仓库里使用，就放到该仓库的项目级目录。
+
+| Agent | 用户级 | 项目级 |
+| --- | --- | --- |
+| WorkBuddy | `~/.workbuddy/skills/`（部分版本为 `~/.workbuddy-ai/skills/`） | `.workbuddy/skills/` |
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| Codex | `~/.codex/skills/`（同时读取 `~/.agents/skills/`） | `.agents/skills/` |
+| OpenCode | `~/.config/opencode/skills/` | `.agents/skills/` |
+| Pi | `~/.agents/skills/` | `.agents/skills/` |
+| DSH（DeepSeek Harness） | `~/.dsh/skills/` | `.dsh/skills/` |
+| Cursor | `~/.cursor/skills/` | `.agents/skills/` |
+| Gemini CLI | `~/.gemini/skills/` | `.agents/skills/` |
+| GitHub Copilot | `~/.copilot/skills/` | `.agents/skills/` |
+| CodeBuddy | `~/.codebuddy/skills/` | `.codebuddy/skills/` |
 
 ```bash
 cp -r learning-assistant ~/.workbuddy/skills/
 ```
+
+如果你的 agent 不在表里，把目录放到该 agent 发现 `SKILL.md` 的位置即可。DSH 也可以用 `dsh plugin add` 作为插件安装。
 
 然后新开一个会话，Skill 才会出现在可用技能列表里。
 

@@ -47,13 +47,28 @@ general layer.
 
 ## Install
 
-Copy this directory into your agent's user-level skills directory. WorkBuddy reads
-`~/.workbuddy/skills/`; some builds and other agents use `~/.workbuddy-ai/skills/` or
-`~/.codebuddy/skills/`. Use the one your agent actually reads.
+Copy this directory into your agent's user-level skills directory, or into its project-level
+directory if you want the skill in one repository only.
+
+| Agent | User-level | Project-level |
+| --- | --- | --- |
+| WorkBuddy | `~/.workbuddy/skills/` (some builds: `~/.workbuddy-ai/skills/`) | `.workbuddy/skills/` |
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| Codex | `~/.codex/skills/` (also reads `~/.agents/skills/`) | `.agents/skills/` |
+| OpenCode | `~/.config/opencode/skills/` | `.agents/skills/` |
+| Pi | `~/.agents/skills/` | `.agents/skills/` |
+| DSH (DeepSeek Harness) | `~/.dsh/skills/` | `.dsh/skills/` |
+| Cursor | `~/.cursor/skills/` | `.agents/skills/` |
+| Gemini CLI | `~/.gemini/skills/` | `.agents/skills/` |
+| GitHub Copilot | `~/.copilot/skills/` | `.agents/skills/` |
+| CodeBuddy | `~/.codebuddy/skills/` | `.codebuddy/skills/` |
 
 ```bash
 cp -r learning-assistant ~/.workbuddy/skills/
 ```
+
+If your agent is not listed, put the directory wherever that agent discovers `SKILL.md`
+files. DSH can also install a skill as a plugin with `dsh plugin add`.
 
 Start a new session so the skill appears in the available-skills list.
 
