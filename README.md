@@ -4,13 +4,7 @@ Task/question driven learning guidance as an Agent Skill. Practical first, no un
 breadth, suitable for a tight deadline, while keeping enough depth to survive after the
 task or exam.
 
-**Status: v0.1.0 skeleton.** Structure and rules are in place; trigger evals and the three
-scenario walkthroughs have not been run yet.
-
-> This file and [README.zh-CN.md](README.zh-CN.md) are the two language versions.
-> **Both READMEs are frozen until the skill is basically usable**: later updates and new
-> features are recorded in the project task document instead of here.
-> 中文版：[README.zh-CN.md](README.zh-CN.md)
+English | [简体中文](README.zh-CN.md)
 
 ## What it is not
 
@@ -48,7 +42,8 @@ Does not activate for one-off questions, pure task execution (fix a bug, run tes
 file, look up an API), or when the user asks for the answer only.
 
 Code-specific rules load only when the user explicitly wants to learn or understand code. If
-the intent is ambiguous, the skill asks one short question first.
+the intent is ambiguous, the skill asks one short question first. Other subjects use the
+general layer.
 
 ## Install
 
@@ -62,9 +57,6 @@ Start a new session so the skill appears in the available-skills list. Some inst
 skills in a different directory (for example `~/.codebuddy/skills/`); make sure the copy ends
 up in the directory your agent actually reads.
 
-No installation step belongs inside `SKILL.md` or the reference files — those are loaded on
-every activation.
-
 ## Optional tools
 
 All are enhancements with a plain-Markdown fallback; none is required.
@@ -76,25 +68,3 @@ All are enhancements with a plain-Markdown fallback; none is required.
   network. Plain Markdown with `[[wikilinks]]` is the required baseline.
 - **Inline chat cards** — require host theme variables and a message-return API. Without
   them, cards degrade to text choices or copyable prompts.
-
-Domain files for mathematics, power electronics, and sensors are **planned, not shipped**.
-Do not create them until the user supplies domain details and approves.
-
-## Development notes
-
-- Keep `SKILL.md` under 500 lines; move detail into `references/`.
-- Every change to the `description` field is a routing change — record before/after text and
-  trigger rates.
-- **Run a privacy scan before every commit.** An offline read-only scanner lives outside the
-  repository in the project's `scripts/` directory and is not published with the skill. It
-  checks staged content for personal data; the git author email also needs review before
-  open-sourcing.
-- Progress and notes are user data and never written into this directory.
-- The local git repository has no remote. Do not push until the user decides to open-source.
-- Both READMEs stay frozen until the skill is basically usable.
-
-## Version history
-
-| Version | Date | Change |
-| --- | --- | --- |
-| 0.1.0 | 2026-11-13 | Initial skeleton: general + code domain, presentation, knowledge network, demos, trigger eval set; bilingual READMEs added |
