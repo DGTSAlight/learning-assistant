@@ -1,4 +1,8 @@
-.DS_Store
+# 忽略除本文件以外的隐藏文件
+.*
+!.gitignore
+
+
 Thumbs.db
 *.pyc
 __pycache__/

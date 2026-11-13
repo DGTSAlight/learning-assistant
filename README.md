@@ -7,6 +7,11 @@ task or exam.
 **Status: v0.1.0 skeleton.** Structure and rules are in place; trigger evals and the three
 scenario walkthroughs have not been run yet.
 
+> This file and [README.zh-CN.md](README.zh-CN.md) are the two language versions.
+> **Both READMEs are frozen until the skill is basically usable**: later updates and new
+> features are recorded in the project task document instead of here.
+> 中文版：[README.zh-CN.md](README.zh-CN.md)
+
 ## What it is not
 
 Not a tutor that explains a whole subject systematically. It sets one verifiable goal, finds
@@ -80,11 +85,16 @@ Do not create them until the user supplies domain details and approves.
 - Keep `SKILL.md` under 500 lines; move detail into `references/`.
 - Every change to the `description` field is a routing change — record before/after text and
   trigger rates.
+- **Run a privacy scan before every commit.** An offline read-only scanner lives outside the
+  repository in the project's `scripts/` directory and is not published with the skill. It
+  checks staged content for personal data; the git author email also needs review before
+  open-sourcing.
 - Progress and notes are user data and never written into this directory.
 - The local git repository has no remote. Do not push until the user decides to open-source.
+- Both READMEs stay frozen until the skill is basically usable.
 
 ## Version history
 
 | Version | Date | Change |
 | --- | --- | --- |
-| 0.1.0 | 2026-11-13 | Initial skeleton: general + code domain, presentation, knowledge network, demos, trigger eval set |
+| 0.1.0 | 2026-11-13 | Initial skeleton: general + code domain, presentation, knowledge network, demos, trigger eval set; bilingual READMEs added |
