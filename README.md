@@ -23,7 +23,7 @@ learning-assistant/
 │   ├── code-learning.md              code domain (read only when selected)
 │   ├── presentation.md               graphics, inline cards, degradation
 │   └── knowledge-network.md          long-term notes, optional vault enhancement
-├── demo/
+├── assets/
 │   ├── inline-card-basic.html        domain-neutral card example
 │   └── inline-card-code-quiz.html    code card example
 └── evals/
@@ -47,15 +47,15 @@ general layer.
 
 ## Install
 
-Copy this directory into your agent's user-level skills directory, for example:
+Copy this directory into your agent's user-level skills directory. WorkBuddy reads
+`~/.workbuddy/skills/`; some builds and other agents use `~/.workbuddy-ai/skills/` or
+`~/.codebuddy/skills/`. Use the one your agent actually reads.
 
 ```bash
-cp -r learning-assistant ~/.workbuddy-ai/skills/
+cp -r learning-assistant ~/.workbuddy/skills/
 ```
 
-Start a new session so the skill appears in the available-skills list. Some installers place
-skills in a different directory (for example `~/.codebuddy/skills/`); make sure the copy ends
-up in the directory your agent actually reads.
+Start a new session so the skill appears in the available-skills list.
 
 ## Optional tools
 

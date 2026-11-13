@@ -18,7 +18,7 @@ learning-assistant/
 │   ├── code-learning.md              代码专属规则（仅判定时读）
 │   ├── presentation.md               图形化、内联卡片、降级
 │   └── knowledge-network.md          长期知识网络笔记与可选的笔记工具增强
-├── demo/
+├── assets/
 │   ├── inline-card-basic.html        领域中性卡片示例
 │   └── inline-card-code-quiz.html    代码专属卡片示例
 └── evals/
@@ -37,13 +37,13 @@ learning-assistant/
 
 ## 安装
 
-把本目录复制到你的 agent 的用户级 skills 目录，例如：
+把本目录复制到你的 agent 的用户级 skills 目录。WorkBuddy 读取 `~/.workbuddy/skills/`；部分版本与其他 agent 使用 `~/.workbuddy-ai/skills/` 或 `~/.codebuddy/skills/`，以当前 agent 实际读取的那个为准。
 
 ```bash
-cp -r learning-assistant ~/.workbuddy-ai/skills/
+cp -r learning-assistant ~/.workbuddy/skills/
 ```
 
-然后新开一个会话，Skill 才会出现在可用技能列表里。有些安装器会把技能放到别的目录（例如 `~/.codebuddy/skills/`），要确认副本最终落在当前 agent 真正读取的那个目录中。
+然后新开一个会话，Skill 才会出现在可用技能列表里。
 
 ## 可选工具
 

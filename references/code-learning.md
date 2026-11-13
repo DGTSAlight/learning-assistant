@@ -36,9 +36,9 @@ Before any teaching or implementation, establish:
 - Explicit constraints, target language and version, and runtime environment.
 - Standard library / third-party / service dependencies that may be involved.
 - Important boundary conditions, failure cases, and risks.
-- Acceptance criteria that tell you the program is done.
+- Acceptance criteria that define when the program is done.
 
-Do not require the user to write a formal spec first. Help them clarify as you go. Ask one
+Do not require the user to write a formal spec first. Clarify as the work proceeds. Ask one
 key question when missing information would materially change architecture, dependencies,
 correctness, or cost; otherwise state a low-risk assumption and proceed.
 

@@ -1,20 +1,7 @@
 ---
 name: learning-assistant
-description: >
-  Task-driven learning guidance. Diagnose what the user actually knows and where it is
-  shallow, set one verifiable learning goal at the depth they want, fill only the
-  foundational gaps that goal needs, verify real understanding through tasks and questions,
-  and leave behind an incrementally maintained knowledge network for long-term review.
-  Deliverables: a depth tier, a diagnostic result, practice and checks, mastery records,
-  spaced review, and short linked notes.
-  Trigger phrases: "teach me", "help me learn", "quiz me", "cram for the exam",
-  "walk me through this code", "why is it written this way",
-  "I never really understood this", and 教我 / 带我学 / 考考我 / 期末速成 /
-  这块我没真懂 / 逐行讲讲 / 我想学 X。
-  Not for one-off questions ("what is X", "explain X"), pure task execution (fix this bug,
-  run the tests, generate a file, look up an API) with no learning intent, or when the user
-  explicitly asks for the answer only. Domain files: code, mathematics, power electronics,
-  sensors; other subjects use the general layer.
+description: This skill should be used for task-driven learning guidance. It diagnoses what the learner knows and where it is shallow, sets one verifiable goal at the wanted depth, fills only the gaps that goal needs, verifies understanding through tasks and questions, and leaves short linked notes for later review. Use it when the learner wants to be taught, quizzed, drilled, or crammed for an exam, says they never really understood something, asks to walk through code line by line, or wants a learning goal set. Trigger phrases include teach me, help me learn, quiz me, cram for the exam, walk me through this code, 教我, 带我学, 考考我, 期末速成, 这块我没真懂, 逐行讲讲, 我想学 X. Do not use it for one-off questions such as what is X or explain X, for pure task execution such as fixing a bug, running tests, generating a file, or looking up an API when there is no learning intent, or when the user asks for the answer only. Domain references exist for code, math, power electronics, and sensors; other subjects use the general layer.
+agent_created: true
 metadata:
   version: "0.1.0"
   scope: general-learning
@@ -100,8 +87,8 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | `references/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
 | `references/gates.md` | At a stage end, or when deciding whether to enable hard checks |
 | `scripts/check-gates.mjs` | Optional deterministic check at a stage end |
-| `demo/inline-card-basic.html` | Need a domain-neutral interactive card example |
-| `demo/inline-card-code-quiz.html` | Need a code-specific interactive card example |
+| `assets/inline-card-basic.html` | Need a domain-neutral interactive card example |
+| `assets/inline-card-code-quiz.html` | Need a code-specific interactive card example |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
 
 Keep references one level deep: each file is self-contained and does not point to another
