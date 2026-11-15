@@ -61,7 +61,12 @@ reason a note ends up useful to nobody.
   sorting and linking stable; the native name keeps it recognisable. No dates in file names —
   the date lives inside the file.
 - `figures/` belongs to the subject folder and is named after the page that uses it, e.g.
-  `figures/R01-i-d-comparison.svg`.
+  `figures/R01-i-d-comparison.svg`. A script that generates those figures lives beside them —
+  regeneration stays next to its output.
+- `INDEX.md` stays at the notes root, so a page in `review/` reaches it as `../../INDEX.md`,
+  its note as `../notes/N01-…`, an explainer as `../explain/E01-…`, and a figure as
+  `../figures/…`. Every link inside a page is relative; an absolute path breaks the moment the
+  folder is moved or copied.
 
 Sorting matters more than it looks. With prefixes a folder view reads `N01 N02 R01 R02 E01`,
 grouped by type and stable at thirty files. Without them, a folder of bare titles has no
@@ -169,7 +174,8 @@ Keep that order. A page with a quiz and no recap is a test, not a review page.
 ### Building one
 
 1. Copy the worked example listed in the skill index. Keep its styles and script; replace the
-   content.
+   content. Set `data-key`, `data-code`, and `data-title` on `<main>` — the script reads the
+   page's identity from there, so no JavaScript needs editing.
 2. Fill the header from the note's front matter: same title, same status, same dates.
 3. Write the recap from the note's conclusion and why fields — same mechanism, more prose, no
    new claims.

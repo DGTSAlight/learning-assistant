@@ -41,6 +41,7 @@
   .points li{margin:0 0 8px}
   .fig{margin:0}
   .fig svg{width:100%;max-width:620px;height:auto;display:block;margin:0 auto;border:1px solid var(--line);border-radius:8px;background:transparent}
+  .fig img{width:100%;max-width:620px;height:auto;display:block;margin:0 auto;border:1px solid var(--line);border-radius:8px}
   .fig figcaption{color:var(--mute);font-size:12px;margin-top:8px;line-height:1.6}
   .ax{stroke:var(--line);stroke-width:1}
   .cv{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
@@ -115,6 +116,8 @@
   .links a:hover{text-decoration:underline}
   .links span{color:var(--mute);font-size:12px;margin-left:8px}
   .foot{color:var(--mute);font-size:12px;margin-top:24px;line-height:1.8}
+  code{font:12.5px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--bg);
+    padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
   @media print{
     body{background:#fff}
     .bar-btns,.ask,.toast,.plan-box,#links{display:none !important}
@@ -124,7 +127,7 @@
 </style>
 </head>
 <body>
-<main class="wrap">
+<main class="wrap" data-key="PE-R01" data-code="R01" data-title="停止触发不是新稳态">
 
   <header>
     <p class="eyebrow">PE-电力电子技术 · 复习页 R01</p>
@@ -333,7 +336,7 @@
       <li><a href="./R02-晶闸管关断条件与换流.html">R02 晶闸管关断条件与换流</a><span>前置，断链点，优先补</span></li>
       <li><a href="./R03-负载性质决定整流波形.html">R03 负载性质决定整流波形</a><span>易混：电压过零只对电阻负载成立</span></li>
       <li><a href="../explain/E01-buck-电路图与工作原理.html">E01 BUCK 电路图与工作原理</a><span>讲解页，一次性的图解</span></li>
-      <li><a href="../INDEX.md">INDEX.md</a><span>本文件夹的目录与状态表</span></li>
+      <li><a href="../../INDEX.md">INDEX.md</a><span>本文件夹的目录与状态表</span></li>
     </ul>
   </section>
 
@@ -348,7 +351,10 @@
 (function () {
   'use strict';
 
-  var KEY = 'review:PE-R01';
+  var root = document.querySelector('main');
+  var KEY = 'review:' + (root.getAttribute('data-key') || 'R01');
+  var CODE = root.getAttribute('data-code') || 'R01';
+  var TITLE = root.getAttribute('data-title') || '';
   var articles = document.querySelectorAll('.q');
   var TOTAL = articles.length;
   var state = { q: {}, visits: 0, last: '' };
@@ -536,7 +542,7 @@
       if (r.wrong > 0 && r.streak < 2) { wrongNos.push(n); }
       if (r.streak >= 2) { doneNos.push(n); }
     }
-    var head = '复习 R01「停止触发不是新稳态」。';
+    var head = '复习 ' + CODE + '「' + TITLE + '」。';
     if (wrongNos.length === 0 && doneNos.length === TOTAL) {
       return head + '4 道题都已连续答对两次。请出一道迁移题（换负载性质或换触发角）检验是否真掌握，先让我判断，再给反馈；不要重讲整页内容。';
     }
@@ -551,7 +557,7 @@
   function askPrompt(article) {
     var no = textOf(article.querySelector('.q-no'));
     var body = textOf(article.querySelector('.q-text')).replace(/^\d+\s*/, '');
-    return '复习页 R01 第 ' + no + ' 题。题目：' + body
+    return '复习页 ' + CODE + ' 第 ' + no + ' 题。题目：' + body
       + ' 我的选择是：' + chosenText(article) + '。正确答案是：' + answerText(article)
       + '。请只讲我这一步错在哪个判据上，用一句话给我一个能在波形上检验的方法，不要重讲整章。';
   }
