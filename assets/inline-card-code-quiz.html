@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Inline card - code specific example</title>
+<title>Inline card - code single choice with reasoning field</title>
 <style>
   body { font-family: system-ui, sans-serif; font-size: 13px; line-height: 1.6; padding: 24px;
          background: var(--color-background-tertiary, #fafafa); color: var(--color-text-primary, #202020); }
-  .card { max-width: 520px; background: var(--color-background-primary, #ffffff);
+  .card { max-width: 560px; background: var(--color-background-primary, #ffffff);
           border: 0.5px solid var(--color-border-tertiary, #d8d8d8);
           border-radius: var(--border-radius-lg, 12px); padding: 16px 20px; }
   .eyebrow { margin: 0 0 4px; font-size: 12px; color: var(--color-text-secondary, #666); }
@@ -19,47 +19,68 @@
            border: 0.5px solid var(--color-border-secondary, #c8c8c8);
            border-radius: var(--border-radius-md, 8px);
            background: transparent; color: inherit; font-family: inherit; }
-  button:hover { border-color: var(--color-border-primary, #999); }
+  button:hover:not(:disabled) { border-color: var(--color-border-primary, #999); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .opt.selected { border-color: var(--color-border-info, #185fa5);
+                  background: var(--color-background-info, #e6f1fb); }
   .feedback { margin: 10px 0 0; font-size: 13px; min-height: 18px; }
+  label { display: block; margin: 12px 0 4px; font-size: 12px;
+          color: var(--color-text-secondary, #666); }
+  textarea, input[type="text"] { width: 100%; box-sizing: border-box; font: inherit; font-size: 13px;
+          padding: 8px 10px; color: inherit;
+          background: var(--color-background-secondary, #f4f4f4);
+          border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+          border-radius: var(--border-radius-md, 8px); }
+  textarea { min-height: 56px; resize: vertical; }
+  .actions { margin-top: 12px; display: grid; gap: 8px; }
+  .actions button { text-align: center; font-weight: 500; }
+  .reserved { margin-top: 16px; padding-top: 12px; display: grid; gap: 8px;
+              border-top: 0.5px solid var(--color-border-tertiary, #d8d8d8); }
+  .reserved p { margin: 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+  .reserved button { font-size: 12px; border-style: dashed; }
   .hint { margin: 12px 0 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
 </style>
 </head>
 <body>
 <div class="card">
   <p class="eyebrow">Check &middot; Python indexing</p>
-  <p class="question">Which line raises IndexError for a non-empty list <code>items</code>?</p>
+  <p class="question" id="q">Which line raises IndexError for a non-empty list items?</p>
   <pre>items = [10, 20, 30]</pre>
   <div class="options">
-    <button data-ok="0">A. print(items[0])</button>
-    <button data-ok="1">B. print(items[len(items)])</button>
-    <button data-ok="0">C. print(items[-1])</button>
+    <button type="button" class="opt" data-ok="0">A. print(items[0])</button>
+    <button type="button" class="opt" data-ok="1">B. print(items[len(items)])</button>
+    <button type="button" class="opt" data-ok="0">C. print(items[-1])</button>
   </div>
   <p class="feedback" id="fb"></p>
-  <button id="more">Ask the assistant to explain why</button>
+  <label for="reason">Why did you choose it? (optional but useful)</label>
+  <textarea id="reason" placeholder="Explain the index range in your own words."></textarea>
+  <div class="actions">
+    <button type="button" id="confirm" disabled>Confirm and send to assistant &#8599;</button>
+  </div>
+  <div class="reserved">
+    <p>Reserved options &mdash; not answers. They send immediately and are never judged right or wrong.</p>
+    <button type="button" class="reserved-btn"
+            data-label="难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)"
+            data-instruction="I did not answer this question. Replace it with a much easier one on the same knowledge point, fill the missing prerequisite first, then re-check me. Do not simply give the answer.">难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)</button>
+    <button type="button" class="reserved-btn"
+            data-label="难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)"
+            data-instruction="I do not need a check at this level. Skip the current difficulty tier and give a clearly harder question or a transfer variant on the same knowledge point, then re-check me.">难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)</button>
+  </div>
   <p class="hint" id="hint"></p>
 </div>
 <script>
 (function () {
+  var question = document.getElementById('q').textContent.trim();
   var fb = document.getElementById('fb');
   var hint = document.getElementById('hint');
+  var reason = document.getElementById('reason');
+  var confirmBtn = document.getElementById('confirm');
+  var opts = Array.prototype.slice.call(document.querySelectorAll('.opt'));
+  var choice = null;
 
-  document.querySelectorAll('[data-ok]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var ok = b.dataset.ok === '1';
-      fb.textContent = ok
-        ? 'Correct. Valid indices are 0 to len(items) - 1.'
-        : 'Not quite. Check the valid index range again.';
-      fb.style.color = ok
-        ? 'var(--color-text-success, #0f6e56)'
-        : 'var(--color-text-danger, #a32d2d)';
-    });
-  });
-
-  document.getElementById('more').addEventListener('click', function () {
-    var prompt = 'Explain why items[len(items)] is out of range, and what a negative ' +
-                 'index means in Python. Then give me one short prediction question.';
+  function deliver(prompt) {
     if (typeof sendPrompt === 'function') {
-      hint.textContent = 'Prompt sent.';
+      hint.textContent = 'Sent to the assistant.';
       sendPrompt(prompt);
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(prompt);
@@ -67,6 +88,40 @@
     } else {
       hint.textContent = 'Message return is unavailable. Prompt: ' + prompt;
     }
+  }
+
+  opts.forEach(function (b) {
+    b.addEventListener('click', function () {
+      opts.forEach(function (o) { o.classList.remove('selected'); });
+      b.classList.add('selected');
+      choice = { label: b.textContent.trim(), ok: b.dataset.ok === '1' };
+      fb.textContent = choice.ok
+        ? 'Correct (local check). Explain your reasoning, then confirm.'
+        : 'Not quite (local check). Check the valid index range, then explain before confirming.';
+      fb.style.color = choice.ok
+        ? 'var(--color-text-success, #0f6e56)'
+        : 'var(--color-text-danger, #a32d2d)';
+      confirmBtn.disabled = false;
+      hint.textContent = '';
+    });
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    if (!choice) { return; }
+    var text = reason.value.trim();
+    var prompt = 'Check my reasoning on this question, not just the option I picked.\n' +
+                 'Question: ' + question + ' The code is items = [10, 20, 30].\n' +
+                 'My answer: ' + choice.label + '\n' +
+                 'Local verdict: ' + (choice.ok ? 'correct' : 'incorrect') + '\n' +
+                 'My explanation: ' + (text || '(none given)') + '\n' +
+                 'Point out any gap in my explanation, correct misconceptions, then set the next check at the right difficulty. Do not treat a lucky guess as mastery.';
+    deliver(prompt);
+  });
+
+  document.querySelectorAll('.reserved-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      deliver(b.dataset.label + '. Current check: ' + question + '. ' + b.dataset.instruction);
+    });
   });
 })();
 </script>

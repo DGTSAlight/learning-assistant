@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inline card - multiple select with reasoning field</title>
+<style>
+  body { font-family: system-ui, sans-serif; font-size: 13px; line-height: 1.6; padding: 24px;
+         background: var(--color-background-tertiary, #fafafa); color: var(--color-text-primary, #202020); }
+  .card { max-width: 560px; background: var(--color-background-primary, #ffffff);
+          border: 0.5px solid var(--color-border-tertiary, #d8d8d8);
+          border-radius: var(--border-radius-lg, 12px); padding: 16px 20px; }
+  .eyebrow { margin: 0 0 4px; font-size: 12px; color: var(--color-text-secondary, #666); }
+  .question { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
+  .options { display: grid; gap: 8px; }
+  button { text-align: left; font-size: 13px; padding: 8px 10px; cursor: pointer;
+           border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+           border-radius: var(--border-radius-md, 8px);
+           background: transparent; color: inherit; font-family: inherit; }
+  button:hover:not(:disabled) { border-color: var(--color-border-primary, #999); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .opt.selected { border-color: var(--color-border-info, #185fa5);
+                  background: var(--color-background-info, #e6f1fb); }
+  .feedback { margin: 10px 0 0; font-size: 13px; min-height: 18px; }
+  label { display: block; margin: 12px 0 4px; font-size: 12px;
+          color: var(--color-text-secondary, #666); }
+  textarea, input[type="text"] { width: 100%; box-sizing: border-box; font: inherit; font-size: 13px;
+          padding: 8px 10px; color: inherit;
+          background: var(--color-background-secondary, #f4f4f4);
+          border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+          border-radius: var(--border-radius-md, 8px); }
+  textarea { min-height: 56px; resize: vertical; }
+  .actions { margin-top: 12px; display: grid; gap: 8px; }
+  .actions button { text-align: center; font-weight: 500; }
+  .reserved { margin-top: 16px; padding-top: 12px; display: grid; gap: 8px;
+              border-top: 0.5px solid var(--color-border-tertiary, #d8d8d8); }
+  .reserved p { margin: 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+  .reserved button { font-size: 12px; border-style: dashed; }
+  .hint { margin: 12px 0 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow">Check &middot; study methods</p>
+  <p class="question" id="q">Which of these count as retrieval practice? Select all that apply.</p>
+  <div class="options">
+    <button type="button" class="opt" data-ok="0" aria-pressed="false">A. Re-reading the explanation until it feels familiar</button>
+    <button type="button" class="opt" data-ok="1" aria-pressed="false">B. Recalling the idea with the book closed, then checking</button>
+    <button type="button" class="opt" data-ok="1" aria-pressed="false">C. Explaining the idea from memory to someone else</button>
+    <button type="button" class="opt" data-ok="0" aria-pressed="false">D. Highlighting key sentences and reviewing them once</button>
+  </div>
+  <div class="actions">
+    <button type="button" id="check" style="text-align:center;">Check locally</button>
+  </div>
+  <p class="feedback" id="fb"></p>
+  <label for="reason">Why these, and not the others? (optional but useful)</label>
+  <textarea id="reason" placeholder="Explain what makes an activity retrieval rather than review."></textarea>
+  <div class="actions">
+    <button type="button" id="confirm" disabled>Confirm and send to assistant &#8599;</button>
+  </div>
+  <div class="reserved">
+    <p>Reserved options &mdash; not answers. They send immediately and are never judged right or wrong.</p>
+    <button type="button" class="reserved-btn"
+            data-label="难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)"
+            data-instruction="I did not answer this question. Replace it with a much easier one on the same knowledge point, fill the missing prerequisite first, then re-check me. Do not simply give the answer.">难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)</button>
+    <button type="button" class="reserved-btn"
+            data-label="难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)"
+            data-instruction="I do not need a check at this level. Skip the current difficulty tier and give a clearly harder question or a transfer variant on the same knowledge point, then re-check me.">难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)</button>
+  </div>
+  <p class="hint" id="hint"></p>
+</div>
+<script>
+(function () {
+  var question = document.getElementById('q').textContent.trim();
+  var opts = Array.prototype.slice.call(document.querySelectorAll('.opt'));
+  var checkBtn = document.getElementById('check');
+  var confirmBtn = document.getElementById('confirm');
+  var fb = document.getElementById('fb');
+  var hint = document.getElementById('hint');
+  var reason = document.getElementById('reason');
+  var checked = null;
+
+  function deliver(prompt) {
+    if (typeof sendPrompt === 'function') {
+      hint.textContent = 'Sent to the assistant.';
+      sendPrompt(prompt);
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(prompt);
+      hint.textContent = 'Message return is unavailable. Prompt copied to clipboard.';
+    } else {
+      hint.textContent = 'Message return is unavailable. Prompt: ' + prompt;
+    }
+  }
+
+  function picked() {
+    return opts.filter(function (o) { return o.getAttribute('aria-pressed') === 'true'; });
+  }
+
+  function invalidate() {
+    checked = null;
+    confirmBtn.disabled = true;
+    fb.textContent = 'Selection changed - check it locally again before confirming.';
+    fb.style.color = 'var(--color-text-secondary, #666)';
+    hint.textContent = '';
+  }
+
+  opts.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var on = b.getAttribute('aria-pressed') === 'true';
+      b.setAttribute('aria-pressed', on ? 'false' : 'true');
+      b.classList.toggle('selected', !on);
+      invalidate();
+    });
+  });
+
+  checkBtn.addEventListener('click', function () {
+    var chosen = picked();
+    if (!chosen.length) {
+      fb.textContent = 'Select at least one statement first.';
+      fb.style.color = 'var(--color-text-secondary, #666)';
+      return;
+    }
+    var expected = opts.filter(function (o) { return o.dataset.ok === '1'; });
+    var ok = chosen.length === expected.length && chosen.every(function (o) {
+      return expected.indexOf(o) !== -1;
+    });
+    checked = { labels: chosen.map(function (o) { return o.textContent.trim(); }), ok: ok };
+    fb.textContent = ok
+      ? 'Correct (local check). Explain why the others do not count, then confirm.'
+      : 'Not quite (local check). Re-check each statement, then explain before confirming.';
+    fb.style.color = ok
+      ? 'var(--color-text-success, #0f6e56)'
+      : 'var(--color-text-danger, #a32d2d)';
+    confirmBtn.disabled = false;
+    hint.textContent = '';
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    if (!checked) { return; }
+    var text = reason.value.trim();
+    var prompt = 'Check my reasoning on this multiple-select question, not just the set of options.\n' +
+                 'Question: ' + question + '\n' +
+                 'My answer: ' + checked.labels.join(' | ') + '\n' +
+                 'Local verdict: ' + (checked.ok ? 'correct' : 'incorrect') + '\n' +
+                 'My explanation: ' + (text || '(none given)') + '\n' +
+                 'Point out any gap in my explanation, correct misconceptions, then set the next check at the right difficulty. Do not treat a lucky guess as mastery.';
+    deliver(prompt);
+  });
+
+  document.querySelectorAll('.reserved-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      deliver(b.dataset.label + '. Current check: ' + question + '. ' + b.dataset.instruction);
+    });
+  });
+})();
+</script>
+</body>
+</html>

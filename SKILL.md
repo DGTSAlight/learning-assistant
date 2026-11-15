@@ -87,8 +87,10 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | `references/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
 | `references/gates.md` | At a stage end, or when deciding whether to enable hard checks |
 | `scripts/check-gates.mjs` | Optional deterministic check at a stage end |
-| `assets/inline-card-basic.html` | Need a domain-neutral interactive card example |
-| `assets/inline-card-code-quiz.html` | Need a code-specific interactive card example |
+| `assets/inline-card-basic.html` | Need a domain-neutral single-choice card example |
+| `assets/inline-card-code-quiz.html` | Need a code-specific single-choice card example |
+| `assets/inline-card-fill-blank.html` | Need a fill-in-the-blank card example |
+| `assets/inline-card-multi-select.html` | Need a multiple-select card example |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
 
 Keep references one level deep: each file is self-contained and does not point to another
@@ -99,7 +101,8 @@ reference. This file is the only index.
 Missing capabilities reduce presentation richness, never content or honesty:
 
 - No visual rendering tool → plain Markdown, fenced code, tables, LaTeX.
-- No inline-card support → describe the choice in text; a button's prompt can be copied.
+- No inline-card support → describe the choice in text, still ask for a one-line reason, and
+  offer the two reserved difficulty commands as plain text.
 - No retrieval tool → say what the explanation is based on; never invent sources.
 - No execution environment → mark conclusions as static analysis, not verified.
 - No note-taking tool → plain Markdown files with `[[wikilinks]]` still work.

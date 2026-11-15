@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inline card - fill in the blank with reasoning field</title>
+<style>
+  body { font-family: system-ui, sans-serif; font-size: 13px; line-height: 1.6; padding: 24px;
+         background: var(--color-background-tertiary, #fafafa); color: var(--color-text-primary, #202020); }
+  .card { max-width: 560px; background: var(--color-background-primary, #ffffff);
+          border: 0.5px solid var(--color-border-tertiary, #d8d8d8);
+          border-radius: var(--border-radius-lg, 12px); padding: 16px 20px; }
+  .eyebrow { margin: 0 0 4px; font-size: 12px; color: var(--color-text-secondary, #666); }
+  .question { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
+  .options { display: grid; gap: 8px; }
+  button { text-align: left; font-size: 13px; padding: 8px 10px; cursor: pointer;
+           border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+           border-radius: var(--border-radius-md, 8px);
+           background: transparent; color: inherit; font-family: inherit; }
+  button:hover:not(:disabled) { border-color: var(--color-border-primary, #999); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .feedback { margin: 10px 0 0; font-size: 13px; min-height: 18px; }
+  label { display: block; margin: 12px 0 4px; font-size: 12px;
+          color: var(--color-text-secondary, #666); }
+  textarea, input[type="text"] { width: 100%; box-sizing: border-box; font: inherit; font-size: 13px;
+          padding: 8px 10px; color: inherit;
+          background: var(--color-background-secondary, #f4f4f4);
+          border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+          border-radius: var(--border-radius-md, 8px); }
+  textarea { min-height: 56px; resize: vertical; }
+  .actions { margin-top: 12px; display: grid; gap: 8px; }
+  .actions button { text-align: center; font-weight: 500; }
+  .reserved { margin-top: 16px; padding-top: 12px; display: grid; gap: 8px;
+              border-top: 0.5px solid var(--color-border-tertiary, #d8d8d8); }
+  .reserved p { margin: 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+  .reserved button { font-size: 12px; border-style: dashed; }
+  .hint { margin: 12px 0 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow">Check &middot; derivative at a point</p>
+  <p class="question" id="q">For f(x) = x^3, fill in the blank: f'(2) = ____</p>
+  <label for="answer">Your answer</label>
+  <input type="text" id="answer" placeholder="Type the value">
+  <div class="actions">
+    <button type="button" id="check" style="text-align:center;">Check locally</button>
+  </div>
+  <p class="feedback" id="fb"></p>
+  <label for="reason">How did you get it? (optional but useful)</label>
+  <textarea id="reason" placeholder="Show the derivative rule or the substitution step."></textarea>
+  <div class="actions">
+    <button type="button" id="confirm" disabled>Confirm and send to assistant &#8599;</button>
+  </div>
+  <div class="reserved">
+    <p>Reserved options &mdash; not answers. They send immediately and are never judged right or wrong.</p>
+    <button type="button" class="reserved-btn"
+            data-label="难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)"
+            data-instruction="I did not answer this question. Replace it with a much easier one on the same knowledge point, fill the missing prerequisite first, then re-check me. Do not simply give the answer.">难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)</button>
+    <button type="button" class="reserved-btn"
+            data-label="难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)"
+            data-instruction="I do not need a check at this level. Skip the current difficulty tier and give a clearly harder question or a transfer variant on the same knowledge point, then re-check me.">难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)</button>
+  </div>
+  <p class="hint" id="hint"></p>
+</div>
+<script>
+(function () {
+  var question = document.getElementById('q').textContent.trim();
+  var answer = document.getElementById('answer');
+  var checkBtn = document.getElementById('check');
+  var confirmBtn = document.getElementById('confirm');
+  var fb = document.getElementById('fb');
+  var hint = document.getElementById('hint');
+  var reason = document.getElementById('reason');
+  var accepted = ['12', '12.0', '12.00'];
+  var checked = null;
+
+  function normalize(s) { return s.trim().toLowerCase().replace(/\s+/g, ''); }
+
+  function deliver(prompt) {
+    if (typeof sendPrompt === 'function') {
+      hint.textContent = 'Sent to the assistant.';
+      sendPrompt(prompt);
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(prompt);
+      hint.textContent = 'Message return is unavailable. Prompt copied to clipboard.';
+    } else {
+      hint.textContent = 'Message return is unavailable. Prompt: ' + prompt;
+    }
+  }
+
+  function invalidate() {
+    checked = null;
+    confirmBtn.disabled = true;
+    fb.textContent = 'Answer changed - check it locally again before confirming.';
+    fb.style.color = 'var(--color-text-secondary, #666)';
+    hint.textContent = '';
+  }
+
+  checkBtn.addEventListener('click', function () {
+    var raw = answer.value.trim();
+    if (!raw) {
+      fb.textContent = 'Type an answer first.';
+      fb.style.color = 'var(--color-text-secondary, #666)';
+      return;
+    }
+    var ok = accepted.some(function (a) { return normalize(a) === normalize(raw); });
+    checked = { value: raw, ok: ok };
+    fb.textContent = ok
+      ? 'Correct (local check). Explain the steps, then confirm.'
+      : 'Not quite (local check). Re-derive it, then explain before confirming.';
+    fb.style.color = ok
+      ? 'var(--color-text-success, #0f6e56)'
+      : 'var(--color-text-danger, #a32d2d)';
+    confirmBtn.disabled = false;
+    hint.textContent = '';
+  });
+
+  answer.addEventListener('input', invalidate);
+  answer.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { checkBtn.click(); }
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    if (!checked) { return; }
+    var text = reason.value.trim();
+    var prompt = 'Check my reasoning on this fill-in-the-blank question, not just the value.\n' +
+                 'Question: ' + question + '\n' +
+                 'My answer: ' + checked.value + '\n' +
+                 'Local verdict: ' + (checked.ok ? 'correct' : 'incorrect') + '\n' +
+                 'My derivation: ' + (text || '(none given)') + '\n' +
+                 'Point out any gap in my derivation, correct misconceptions, then set the next check at the right difficulty. Do not treat a lucky guess as mastery.';
+    deliver(prompt);
+  });
+
+  document.querySelectorAll('.reserved-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      deliver(b.dataset.label + '. Current check: ' + question + '. ' + b.dataset.instruction);
+    });
+  });
+})();
+</script>
+</body>
+</html>

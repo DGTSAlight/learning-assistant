@@ -40,15 +40,55 @@ decoration.
   inline handlers via CSP.
 - Local judgements (right/wrong, toggles, small calculations) happen inside the card; do not
   send a chat message just to evaluate a click.
+- The worked examples are standalone HTML documents. An inline card is a fragment: strip the
+  document shell and keep only the card markup, its styles, and its script.
+
+### Question card contract
+
+Every card that presents a question, of any type, follows the same four-part flow. The point is
+to judge the learner's reasoning, not only the selected option.
+
+1. **Answer controls** — one of single choice, multiple select, or fill-in-the-blank. Multiple
+   select needs a local check control because the set is complete only after the last toggle;
+   fill-in-the-blank needs one because free text must be normalised and compared against a list
+   of acceptable answers. Note the question text in the card so the sent prompt can quote it.
+2. **Free-text reasoning field** — present on **every** question card, including choice cards,
+   so a short explanation can be requested at any time. It is optional by default; the task text
+   may make it required. A choice question must never be answer-only: a correct option without a
+   reason may be a lucky guess.
+3. **Local verdict, then one confirm gate** — clicking an answer control, or the local check,
+   shows correct/incorrect immediately inside the card and sends nothing. A wrong verdict gives
+   a direction hint, not the full solution. One explicit confirm control then sends a **single**
+   message containing the question, the answer(s), the local verdict, the free-text explanation,
+   and an instruction to evaluate the reasoning rather than the option. Confirm stays disabled
+   until a local verdict exists; any change to the answer invalidates that verdict and requires
+   a new local check.
+4. **Two reserved difficulty options** — added to every question card, visually separate from
+   the answer controls, never judged right or wrong, never counted as an answer. They are the
+   only exception to the confirm gate: clicking one sends immediately.
+
+The reserved options are a fixed contract with these exact labels. An English gloss follows the
+Chinese text in the button so the card stays usable across languages.
+
+| Reserved label | What the sent prompt asks for |
+| --- | --- |
+| `难度太高，需要大幅降低难度` | Replace the current question with a much easier one on the same knowledge point; supply the missing prerequisite first, then re-check. Do not just reveal the answer. |
+| `难度太低，可以快速提升难度` | Skip the current difficulty tier and give a clearly harder question or a transfer variant on the same knowledge point, then re-check. |
+
+Both prompts must be complete and standalone: restate the exact label, name the current
+question, and state that the question was not answered. The assistant responds by re-setting the
+difficulty, not by grading an answer. All other card text follows the user's language; only
+these two labels are fixed.
 
 ### Buttons bound to prompts
 
 When message return is supported, a button may carry a preset prompt. Requirements:
 
-- The button label must match what is actually sent.
-- The prompt must be a complete, standalone instruction, not a fragment relying on context.
-- If message return is unavailable, degrade to copying the prompt to the clipboard and tell
-  the user.
+- The button label must match what is actually sent; a decorative arrow is not part of the label.
+- The prompt must be complete and standalone: it carries the question text, not "this question".
+- The confirm gate sends one consolidated message per question; never one message per click.
+- If message return is unavailable, degrade to copying the assembled prompt to the clipboard
+  and tell the user. If that also fails, show the prompt inside the card so it can be pasted.
 - Worked card examples are listed in the skill index; they are resources, not rules to
   inline here.
 
@@ -63,7 +103,7 @@ repeatedly opened, produce a note or a standalone page instead.
 | Missing | Behaviour |
 | --- | --- |
 | No page renderer | Markdown / code fences / tables / LaTeX |
-| No inline cards | Text choices, or copyable prompts |
+| No inline cards | Text choices, a written one-line reason, and the two difficulty commands as copyable text |
 | No theme variables | Neutral solid colours |
 | No message-return API | Copy prompt to clipboard |
 | No source-fetch tool | Say what the explanation is based on |
