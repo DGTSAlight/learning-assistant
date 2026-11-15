@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inline card - multiple blanks with one submission</title>
+<style>
+  body { font-family: system-ui, sans-serif; font-size: 13px; line-height: 1.6; padding: 24px;
+         background: var(--color-background-tertiary, #fafafa); color: var(--color-text-primary, #202020); }
+  .card { max-width: 560px; background: var(--color-background-primary, #ffffff);
+          border: 0.5px solid var(--color-border-tertiary, #d8d8d8);
+          border-radius: var(--border-radius-lg, 12px); padding: 16px 20px; }
+  .eyebrow { margin: 0 0 4px; font-size: 12px; color: var(--color-text-secondary, #666); }
+  .question { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
+  .blank-row { display: grid; gap: 4px; margin-bottom: 10px; }
+  label { font-size: 12px; color: var(--color-text-secondary, #666); }
+  button { text-align: left; font-size: 13px; padding: 8px 10px; cursor: pointer;
+           border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+           border-radius: var(--border-radius-md, 8px);
+           background: transparent; color: inherit; font-family: inherit; }
+  button:hover:not(:disabled) { border-color: var(--color-border-primary, #999); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  textarea, input[type="text"] { width: 100%; box-sizing: border-box; font: inherit; font-size: 13px;
+          padding: 8px 10px; color: inherit;
+          background: var(--color-background-secondary, #f4f4f4);
+          border: 0.5px solid var(--color-border-secondary, #c8c8c8);
+          border-radius: var(--border-radius-md, 8px); }
+  textarea { min-height: 56px; resize: vertical; }
+  .feedback { margin: 10px 0 0; font-size: 13px; min-height: 18px; }
+  .actions { margin-top: 12px; display: grid; gap: 8px; }
+  .actions button { text-align: center; font-weight: 500; }
+  .reserved { margin-top: 16px; padding-top: 12px; display: grid; gap: 8px;
+              border-top: 0.5px solid var(--color-border-tertiary, #d8d8d8); }
+  .reserved p { margin: 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+  .reserved button { font-size: 12px; border-style: dashed; }
+  .hint { margin: 12px 0 0; font-size: 12px; color: var(--color-text-tertiary, #888); }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow">Check &middot; derivatives</p>
+  <p class="question" id="q">For f(x) = x^3 - 3x, fill in all three blanks: f'(x) = ____ ; f'(0) = ____ ; f''(0) = ____</p>
+
+  <div class="blank-row">
+    <label for="b1">Blank 1 - f'(x)</label>
+    <input type="text" id="b1" class="blank" placeholder="The derivative function">
+  </div>
+  <div class="blank-row">
+    <label for="b2">Blank 2 - f'(0)</label>
+    <input type="text" id="b2" class="blank" placeholder="Value at x = 0">
+  </div>
+  <div class="blank-row">
+    <label for="b3">Blank 3 - f''(0)</label>
+    <input type="text" id="b3" class="blank" placeholder="Second derivative at x = 0">
+  </div>
+
+  <div class="actions">
+    <button type="button" id="check" style="text-align:center;">Check locally</button>
+  </div>
+  <p class="feedback" id="fb"></p>
+  <label for="reason">How did you get them? (optional but useful)</label>
+  <textarea id="reason" placeholder="Show the differentiation steps."></textarea>
+  <div class="actions">
+    <button type="button" id="confirm" disabled>Confirm and send to assistant &#8599;</button>
+  </div>
+  <div class="reserved">
+    <p>Reserved options &mdash; not answers. They send immediately and are never judged right or wrong.</p>
+    <button type="button" class="reserved-btn"
+            data-label="难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)"
+            data-instruction="I did not answer this question. Replace it with a much easier one on the same knowledge point, fill the missing prerequisite first, then re-check me. Do not simply give the answers.">难度太高，需要大幅降低难度 (Too hard - lower the difficulty considerably)</button>
+    <button type="button" class="reserved-btn"
+            data-label="难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)"
+            data-instruction="I do not need a check at this level. Skip the current difficulty tier and give a clearly harder question or a transfer variant on the same knowledge point, then re-check me.">难度太低，可以快速提升难度 (Too easy - raise the difficulty quickly)</button>
+  </div>
+  <p class="hint" id="hint"></p>
+</div>
+<script>
+(function () {
+  var question = document.getElementById('q').textContent.trim();
+  var blanks = [document.getElementById('b1'),
+                document.getElementById('b2'),
+                document.getElementById('b3')];
+  var checkBtn = document.getElementById('check');
+  var confirmBtn = document.getElementById('confirm');
+  var fb = document.getElementById('fb');
+  var hint = document.getElementById('hint');
+  var reason = document.getElementById('reason');
+  var accepted = [
+    ['3x^2-3', '3x^2 - 3', '3*x^2-3'],
+    ['-3', '-3.0'],
+    ['0', '0.0']
+  ];
+  var checked = null;
+
+  function normalize(s) { return s.trim().toLowerCase().replace(/\s+/g, ''); }
+
+  function deliver(prompt) {
+    if (typeof sendPrompt === 'function') {
+      hint.textContent = 'Sent to the assistant.';
+      sendPrompt(prompt);
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(prompt);
+      hint.textContent = 'Message return is unavailable. Prompt copied to clipboard.';
+    } else {
+      hint.textContent = 'Message return is unavailable. Prompt: ' + prompt;
+    }
+  }
+
+  function invalidate() {
+    checked = null;
+    confirmBtn.disabled = true;
+    fb.textContent = 'Answer changed - check all blanks locally again before confirming.';
+    fb.style.color = 'var(--color-text-secondary, #666)';
+    hint.textContent = '';
+  }
+
+  blanks.forEach(function (b) { b.addEventListener('input', invalidate); });
+
+  checkBtn.addEventListener('click', function () {
+    var results = blanks.map(function (b, i) {
+      var raw = b.value.trim();
+      var ok = raw !== '' && accepted[i].some(function (a) {
+        return normalize(a) === normalize(raw);
+      });
+      return { value: raw || '(unanswered)', ok: ok };
+    });
+    var allOk = results.every(function (r) { return r.ok; });
+    checked = results;
+    fb.textContent = results.map(function (r, i) {
+      return 'Blank ' + (i + 1) + ': ' + (r.ok ? 'correct' : 'incorrect');
+    }).join(' | ') + '. ' + (allOk ? 'All blanks correct.' : 'Re-derive the wrong blanks, then explain before confirming.');
+    fb.style.color = allOk
+      ? 'var(--color-text-success, #0f6e56)'
+      : 'var(--color-text-danger, #a32d2d)';
+    confirmBtn.disabled = false;
+    hint.textContent = '';
+  });
+
+  confirmBtn.addEventListener('click', function () {
+    if (!checked) { return; }
+    var text = reason.value.trim();
+    var lines = checked.map(function (r, i) {
+      return 'Blank ' + (i + 1) + ': ' + r.value + ' (local verdict: ' + (r.ok ? 'correct' : 'incorrect') + ')';
+    });
+    var prompt = 'Check my reasoning on this multiple-blank question, not just the values.\n' +
+                 'Question: ' + question + '\n' + lines.join('\n') + '\n' +
+                 'My derivation: ' + (text || '(none given)') + '\n' +
+                 'Point out any gap in my derivation, correct misconceptions, then set the next check at the right difficulty. Do not treat a lucky guess as mastery.';
+    deliver(prompt);
+  });
+
+  document.querySelectorAll('.reserved-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      deliver(b.dataset.label + '. Current check: ' + question + '. ' + b.dataset.instruction);
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -72,6 +72,15 @@ learner can read a commutation waveform produces memorised formulas with no mode
 Within a chapter, go **waveform first**: what the switches do, what the output looks like,
 then the formula. Never start with the gain equation.
 
+When an explanation splits into cases — resistive vs inductive load, continuous vs
+discontinuous conduction, before vs after a commutation instant, switch on vs off — do not
+write it as one linear paragraph. Produce a one-page visual explainer with one panel per case
+(a waveform or a comparison table), and keep the reply body to the conclusion. This is the
+default for a learner who is shaky on device turn-off or commutation: the distinction between
+"the device turns off at the supply zero crossing" and "the next pair commutates the current
+away" must be visible, not narrated. The same applies to the continuous/discontinuous boundary
+where a gain formula silently stops holding.
+
 ## 5. What "really understanding" means here
 
 - **Topology ↔ mode.** For a given circuit, name the conducting devices in each interval.

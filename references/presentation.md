@@ -5,11 +5,12 @@ Self-contained rules for how an explanation is shown. These are means, not the c
 
 ## Priority order
 
-1. **Graphical content** — when a diagram, multi-panel layout, comparison, flow, or
-   structure would help, first try a single-page HTML explainer via the `answer-me-with-html`
-   skill. Its CLI is a bundled script inside that skill's directory, not a guaranteed global
-   `am` command; use the actual script path, and verify the tool exists before claiming a
-   page was generated.
+1. **Graphical content** — when the explanation contains parts that relate, branch, change
+   over time, or depend on a condition, **produce** a single-page HTML explainer via the
+   `answer-me-with-html` skill. Do not wait for the user to ask for a diagram, and do not
+   require a long answer as a precondition. Its CLI is a bundled script inside that skill's
+   directory, not a guaranteed global `am` command; use the actual script path, and verify the
+   tool exists before claiming a page was generated.
 2. **Interactive content** — when the user needs to click, choose, switch, or adjust, first
    try an inline chat card rather than describing "you could try this".
 3. **Fallback** — plain Markdown, fenced code, lists, tables, and LaTeX. Never force a
@@ -18,12 +19,44 @@ Self-contained rules for how an explanation is shown. These are means, not the c
 A long-term knowledge note is a **deliverable**, not a per-turn presentation. It follows the
 note rules, not this priority list.
 
+### When a page is the default, not an option
+
+Generate a page proactively when **any one** of these signals is present. One signal is enough.
+
+| Signal | Why prose fails |
+| --- | --- |
+| The learner is diagnosed as shaky / not learned, has just answered wrong twice, or is confusing two mechanisms | A paragraph lets the wrong model survive; a page makes the split visible |
+| The content has **two or more conditions or cases** (A vs B, on vs off, continuous vs discontinuous, before vs after a boundary) | Linear text cannot show which fact belongs to which case |
+| There is a branch, flow, state transition, commutation, or waveform sequence | Order and timing are the content |
+| Three or more concepts must be held together (mechanism → consequence → usual mistake) | A sentence chain loses the links |
+| A comparison, trade-off, or can/cannot list across two or more dimensions | A table or panel is the shape of the answer |
+
+**A weak foundation raises the priority, it does not lower it.** When the diagnostic shows the
+user is new or shaky, generate the page before the next check instead of compressing the
+explanation into a dense paragraph to save turns. "Explain briefly" limits the prose, not the
+visual: a short reply plus one page is still brief, and is not an expansion into adjacent
+topics.
+
+Do not require three separate concepts, a long answer, or an explicit request as a gate. The
+only reasons to stay in prose are: one isolated fact with no relation, a pure confirmation, or
+a renderer that is unavailable. If the host has the `answer-me-with-html` skill configured as
+always-on, follow that setting.
+
+### Case splits need a page, not a paragraph
+
+If an explanation contains "only two ways", "if A ... but if B ...", "on one side of the
+boundary ... on the other", or any list of conditions, render it as a flow, comparison table,
+or timeline with **one panel per case**, then state the conclusion in the reply body. A single
+paragraph that mixes several mechanisms and several cases without showing which statement
+belongs to which case is the failure mode to avoid.
+
 ## Pages are a supplement
 
 The reply body still carries the conclusion and the key explanation. Do not move everything
 into a page. After generating one, state its path and main panels so the user can find it
-later. Do not make a page for something a sentence can answer. Content accuracy beats
-decoration.
+later. Skip a page only for one isolated fact with no relation, or a pure confirmation. Do not
+use "a sentence could answer it" to skip a page when a signal above is present. Content
+accuracy beats decoration.
 
 ## Inline card style
 
@@ -48,10 +81,12 @@ decoration.
 Every card that presents a question, of any type, follows the same four-part flow. The point is
 to judge the learner's reasoning, not only the selected option.
 
-1. **Answer controls** — one of single choice, multiple select, or fill-in-the-blank. Multiple
-   select needs a local check control because the set is complete only after the last toggle;
-   fill-in-the-blank needs one because free text must be normalised and compared against a list
-   of acceptable answers. Note the question text in the card so the sent prompt can quote it.
+1. **Answer controls** — one of single choice, multiple select, fill-in-the-blank, several
+   blanks in one question, or a set of related questions. One card is scoped to **one task**,
+   not to one question. Multiple select needs a local check control because the set is complete
+   only after the last toggle; fill-in-the-blank needs one because free text must be normalised
+   and compared against a list of acceptable answers. Note every question text in the card so
+   the sent prompt can quote it.
 2. **Free-text reasoning field** — present on **every** question card, including choice cards,
    so a short explanation can be requested at any time. It is optional by default; the task text
    may make it required. A choice question must never be answer-only: a correct option without a
@@ -62,7 +97,9 @@ to judge the learner's reasoning, not only the selected option.
    message containing the question, the answer(s), the local verdict, the free-text explanation,
    and an instruction to evaluate the reasoning rather than the option. Confirm stays disabled
    until a local verdict exists; any change to the answer invalidates that verdict and requires
-   a new local check.
+   a new local check. Open answers are the exception — see below: no verdict is fabricated, the
+   prompt says the verdict is unavailable, and confirm is enabled once at least one answer is
+   written.
 4. **Two reserved difficulty options** — added to every question card, visually separate from
    the answer controls, never judged right or wrong, never counted as an answer. They are the
    only exception to the confirm gate: clicking one sends immediately.
@@ -79,6 +116,32 @@ Both prompts must be complete and standalone: restate the exact label, name the 
 question, and state that the question was not answered. The assistant responds by re-setting the
 difficulty, not by grading an answer. All other card text follows the user's language; only
 these two labels are fixed.
+
+### Question sets and multiple blanks
+
+A card is scoped to **one task**, not to one question. A diagnostic set of 2–5 related
+questions, one question with several blanks, or one question with several sub-questions is one
+task. When the plan asks several questions at once, do **not** fall back to a plain-text list
+because a worked example happens to show a single question. Choose one of these shapes:
+
+| Situation | Card shape |
+| --- | --- |
+| Questions should be answered together and graded together (diagnostic, "answer all, then I will give feedback") | One **question-set card**: one field per question or sub-question, one confirm, one consolidated prompt |
+| Questions are independent and should be graded one at a time | Several single-question cards, one per question, each with its own confirm |
+| One question has several blanks | One **multi-blank card**: one input per blank, one local check, one confirm |
+
+Rules for question-set cards:
+
+- Number every question and sub-question. The confirm prompt quotes each question text and each
+  answer, and marks unanswered ones as `(unanswered)`. A blank is diagnostic evidence, not a
+  skipped point; never fill it in for the user.
+- Keep the single confirm gate and the two reserved difficulty options. Local interactions
+  such as revealing a direction hint stay inside the card and send nothing.
+- **Open answers have no local verdict.** Do not fabricate correct/incorrect for free text.
+  State that the verdict is unavailable and ask the assistant to grade each answer separately,
+  name the layer where the reasoning broke, and set the next difficulty.
+- Confirm stays disabled until at least one answer is non-empty. Editing an already-checked
+  multi-blank card invalidates its local verdicts and requires a new local check.
 
 ### Buttons bound to prompts
 
@@ -102,8 +165,8 @@ repeatedly opened, produce a note or a standalone page instead.
 
 | Missing | Behaviour |
 | --- | --- |
-| No page renderer | Markdown / code fences / tables / LaTeX |
-| No inline cards | Text choices, a written one-line reason, and the two difficulty commands as copyable text |
+| No page renderer | Markdown / code fences / tables / LaTeX; still split cases into a Markdown table or numbered branches, not a dense paragraph |
+| No inline cards | Text choices, a written one-line reason, the two difficulty commands as copyable text, and a numbered question set when several questions are asked |
 | No theme variables | Neutral solid colours |
 | No message-return API | Copy prompt to clipboard |
 | No source-fetch tool | Say what the explanation is based on |

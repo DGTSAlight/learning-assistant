@@ -24,6 +24,7 @@ lecturing more.
 
 1. **Set the goal** — agree on one verifiable outcome and a depth tier before teaching.
 2. **Diagnose** — find what the user already studied and where it is shallow or mistaken.
+   A set of discriminating questions is one task: present it as one card, not a text wall.
 3. **Fill gaps** — supply only the foundations the goal actually requires, tracing back from
    the broken point.
 4. **Drive by task or question** — explain briefly, then make the user do, predict, explain,
@@ -91,6 +92,8 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | `assets/inline-card-code-quiz.html` | Need a code-specific single-choice card example |
 | `assets/inline-card-fill-blank.html` | Need a fill-in-the-blank card example |
 | `assets/inline-card-multi-select.html` | Need a multiple-select card example |
+| `assets/inline-card-multi-blank.html` | Need a several-blanks-in-one-question card example |
+| `assets/inline-card-question-set.html` | Need a multi-question diagnostic card example |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
 
 Keep references one level deep: each file is self-contained and does not point to another
@@ -102,7 +105,8 @@ Missing capabilities reduce presentation richness, never content or honesty:
 
 - No visual rendering tool → plain Markdown, fenced code, tables, LaTeX.
 - No inline-card support → describe the choice in text, still ask for a one-line reason, and
-  offer the two reserved difficulty commands as plain text.
+  offer the two reserved difficulty commands as plain text. Keep a multi-question diagnostic
+  as one numbered set with one "answer all at once" instruction.
 - No retrieval tool → say what the explanation is based on; never invent sources.
 - No execution environment → mark conclusions as static analysis, not verified.
 - No note-taking tool → plain Markdown files with `[[wikilinks]]` still work.

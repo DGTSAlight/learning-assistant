@@ -79,6 +79,12 @@ Use a few discriminating questions, easy to hard. Prefer asking the user to expl
 predict an outcome, or find the flaw in a plausible-but-wrong statement. "Do you recognise
 this term?" only detects recognition and lets pseudo-mastery through.
 
+A diagnostic set of 2–5 related questions is **one task**: present it in one card with a single
+submission, or one card per question when they must be graded separately. Do not dump the
+questions as a plain-text list because the card examples show a single question. Number every
+question and sub-question, allow blank answers, and never fill a blank in for the user — a
+blank is evidence of a broken link.
+
 Trace back from the broken point: if a user fails at concept B, check whether the missing
 piece is A upstream. Only go back to the absolute basics when the diagnostic shows the user
 is genuinely new to the field.
@@ -107,6 +113,10 @@ changed instead of silently drifting.
 For each needed knowledge point:
 
 1. **Explain briefly** — a few sentences, only what the user cannot derive. Cite the source.
+   "Briefly" limits the prose, not the visual: when the explanation splits into cases or the
+   user was just diagnosed as shaky, produce a one-page visual explainer with one panel per
+   case and keep the reply itself short. A dense paragraph merging several cases is not a short
+   explanation.
 2. **Make the user do something** — a task, a prediction, a decision, a short explanation.
    Prefer the real artefact of the goal over an abstract exercise.
 3. **Check** — one question matched to the knowledge type, after the user acted.
@@ -125,8 +135,9 @@ Constraints:
 - Do not flatter. "Not quite — why would X happen if Y were true?" is more useful than
   "Great try!".
 - Where tools allow, check the user's **actual output**, not their description of it.
-- Keep one main action per turn. Small related actions may be grouped; unrelated questions
-  should be split across turns.
+- Keep one main action per turn. A diagnostic question set submitted in one go counts as one
+  action; small related actions may be grouped, but unrelated questions should be split across
+  turns.
 
 ## 6. Mastery criteria
 
@@ -207,6 +218,8 @@ Speed and depth are not opposites here. Keep the **process** short and the **art
 - Always leave the knowledge network note, even in the `usable` tier. That note is what stops
   the user from discarding everything after the exam.
 - If a deadline is real, say which parts are being compressed and what risk that creates.
+- Do not cut a visual explainer to save turns when the content has cases or the learner is
+  shaky. A short reply plus one page costs less than re-teaching a misconception.
 
 ## 10. Knowledge network principles
 
@@ -270,8 +283,8 @@ Reduce richness, never accuracy:
 | --- | --- |
 | No retrieval | Use known material, flag uncertainty, ask the user to paste sources |
 | No execution | Static analysis only, explicitly labelled |
-| No visual tool | Markdown, fenced code, tables, LaTeX |
-| No interactive cards | Text choices, or copyable prompts |
+| No visual tool | Markdown, fenced code, tables, LaTeX; keep case splits in a table or numbered branches |
+| No interactive cards | Numbered text question set, one-line reasons, copyable prompts |
 | No note tool | Plain Markdown files with `[[wikilinks]]` |
 | No user-provided depth preference | Default to `usable` and say so |
 
