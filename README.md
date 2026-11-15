@@ -127,7 +127,7 @@ asks before writing anything, and checks the result afterwards.
 ```
 Please install an Agent Skill for me.
 
-Source: https://github.com/QingYunA/learning-assistant
+Source: https://github.com/DGTSAlight/learning-assistant
 (If that URL does not open, ask me for the correct one instead of guessing.)
 
 1. Tell me which agent I am using, then find its user-level skills directory:
@@ -175,7 +175,7 @@ directory if you want the skill in one repository only.
 | CodeBuddy | `~/.codebuddy/skills/` | `.codebuddy/skills/` |
 
 ```bash
-git clone https://github.com/QingYunA/learning-assistant
+git clone https://github.com/DGTSAlight/learning-assistant
 cp -r learning-assistant ~/.workbuddy/skills/
 ```
 

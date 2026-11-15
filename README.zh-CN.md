@@ -99,7 +99,7 @@
 ```
 请帮我安装一个 Agent Skill。
 
-来源：https://github.com/QingYunA/learning-assistant
+来源：https://github.com/DGTSAlight/learning-assistant
 （如果这个地址打不开，先问我正确的地址，不要自己猜。）
 
 1. 先确认我用的是哪个 agent，再找到它的用户级 skills 目录：
@@ -146,7 +146,7 @@
 | CodeBuddy | `~/.codebuddy/skills/` | `.codebuddy/skills/` |
 
 ```bash
-git clone https://github.com/QingYunA/learning-assistant
+git clone https://github.com/DGTSAlight/learning-assistant
 cp -r learning-assistant ~/.workbuddy/skills/
 ```
 
