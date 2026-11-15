@@ -77,6 +77,10 @@ exactly the ability that fails there.
   standard references, and state which one is being used.
 - Prefer sources that state conditions and proofs, not formula collections.
 - For hand-written work, image input or OCR is required; otherwise transcribe.
+- When a condition, a counterexample, or a symbol ↔ picture link is explained, produce a real
+  plot or geometric figure (a script-generated SVG is enough), label the axes and the failing
+  condition, and state any simplifying assumption. A table of sample values is not a
+  substitute for the curve or the shape.
 - Do not invent page numbers, exercise numbers, theorem numbering, or exam scope.
 
 ## 7. Boundaries

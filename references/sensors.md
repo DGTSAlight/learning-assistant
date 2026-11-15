@@ -103,6 +103,12 @@ circuit measures, then the variants.
 Avoid pure definition recall for chapters the learner has already seen; go to mechanism and
 selection. Multiple choice is acceptable for symbol and term recall.
 
+Show the characteristic curve itself when one is involved: sensitivity as a slope, linearity
+error against a fitted line, hysteresis as two branches, drift as a shifted curve, and the
+usable range as marked limits. A table of indicators lists the values but does not show these
+shapes; generate the figure with a script or SVG and state whether it is illustrative or taken
+from a datasheet.
+
 ## 7. Sources
 
 The textbook above; manufacturer datasheets for real devices when available. Do not invent

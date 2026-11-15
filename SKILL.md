@@ -85,6 +85,7 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | `references/power-electronics.md` | Only when the selection table above says so |
 | `references/sensors.md` | Only when the selection table above says so |
 | `references/presentation.md` | When deciding how to present an explanation, diagram, or interactive card |
+| `references/technical-figures.md` | When an explanation needs a circuit diagram, waveform, characteristic curve, or other technical figure |
 | `references/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
 | `references/gates.md` | At a stage end, or when deciding whether to enable hard checks |
 | `scripts/check-gates.mjs` | Optional deterministic check at a stage end |
@@ -94,6 +95,8 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | `assets/inline-card-multi-select.html` | Need a multiple-select card example |
 | `assets/inline-card-multi-blank.html` | Need a several-blanks-in-one-question card example |
 | `assets/inline-card-question-set.html` | Need a multi-question diagnostic card example |
+| `assets/figure-waveform-example.svg` | Need a worked example of a labelled waveform figure |
+| `scripts/draw-waveform-example.py` | Need a runnable, dependency-free script that emits a waveform SVG |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
 
 Keep references one level deep: each file is self-contained and does not point to another
@@ -104,6 +107,9 @@ reference. This file is the only index.
 Missing capabilities reduce presentation richness, never content or honesty:
 
 - No visual rendering tool → plain Markdown, fenced code, tables, LaTeX.
+- No plotting library or no image embedding → generate a local SVG with a standard-library
+  script or by hand, give its path, and say when it cannot be shown inline. A table of
+  attributes is never a substitute for a required circuit diagram or waveform.
 - No inline-card support → describe the choice in text, still ask for a one-line reason, and
   offer the two reserved difficulty commands as plain text. Keep a multi-question diagnostic
   as one numbered set with one "answer all at once" instruction.

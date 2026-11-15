@@ -30,6 +30,7 @@ Generate a page proactively when **any one** of these signals is present. One si
 | There is a branch, flow, state transition, commutation, or waveform sequence | Order and timing are the content |
 | Three or more concepts must be held together (mechanism → consequence → usual mistake) | A sentence chain loses the links |
 | A comparison, trade-off, or can/cannot list across two or more dimensions | A table or panel is the shape of the answer |
+| The reader must see shape, slope, zero crossings, phase, connectivity, or device labels | A real plotted figure or circuit diagram is required; the figure resource listed in the skill index gives the method |
 
 **A weak foundation raises the priority, it does not lower it.** When the diagnostic shows the
 user is new or shaky, generate the page before the next check instead of compressing the
@@ -49,6 +50,17 @@ boundary ... on the other", or any list of conditions, render it as a flow, comp
 or timeline with **one panel per case**, then state the conclusion in the reply body. A single
 paragraph that mixes several mechanisms and several cases without showing which statement
 belongs to which case is the failure mode to avoid.
+
+### A table is not a figure
+
+When the content is a circuit topology, a waveform, a characteristic curve, or a timing
+diagram, a table of attributes or a chain of flow boxes states the conclusion but does not show
+the shape. A panel that lists "resistive load: u_d = 0 / inductive load: u_d goes negative" has
+not shown the negative interval on a time axis. Add a real figure drawn with a script or SVG,
+and keep the table or flow box only as a companion. Read the figure reference listed in the
+skill index before producing any technical page. Do not let the page renderer's built-in
+components decide this: `chart` suits discrete numbers, `flow` suits causal order, and neither
+carries a piecewise waveform with a firing angle or a labelled conduction interval.
 
 ## Pages are a supplement
 
