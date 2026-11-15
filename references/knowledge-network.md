@@ -12,10 +12,79 @@ across sessions instead of resetting.
 The tool is not the point. Depth comes from explaining, transferring, and reviewing. A vault
 app only makes the relations easier to see.
 
-## Core format
+## Two artefacts, two readers
 
-One short note per knowledge point. Keep it short enough to reread in a minute. Use a stable
-set of fields:
+The network is not one file. Two artefacts do different jobs, and mixing them is the usual
+reason a note ends up useful to nobody.
+
+| Artefact | Path | Reader | Job |
+| --- | --- | --- | --- |
+| Note | `notes/N01-<point>.md` | the assistant, next session | restore state after a context reset or a model switch |
+| Review page | `review/R01-<point>.html` | the user, days later | make re-learning cheap: recap, wrong-question redo, relation map, links |
+
+- A note is **terse on purpose** — conclusion, the error actually made, relations, last
+  result. It is a state record, not a study text. Do not pad it so that it "reads better";
+  its reader is a model resuming work, and short fields are exactly what it needs.
+- A review page is **for the eye** — a one-screen recap, one figure, questions the user can
+  redo without the assistant, and links to the neighbours. It never carries the state fields;
+  the note owns those.
+- Same point, same number: `N01` and `R01` are one knowledge point for two readers. Never
+  number them independently.
+- The page is optional per point; the note is not. A point without a page still has its
+  state; a point without a note loses it.
+
+## Layout and naming
+
+```
+<notes root>/
+  INDEX.md                     the map: goal, depth, status table, one link per page
+  PE-<subject>/                one folder per subject
+    notes/N01-<point>.md
+    review/R01-<point>.html
+    explain/E01-<subject>.html
+    figures/
+```
+
+- `<notes root>` is chosen by the user; `learning-notes/` inside the task directory is the
+  fallback. Never write notes inside the skill directory.
+- One folder per subject, named `<CODE>-<subject>`. The code is 2–4 uppercase ASCII letters:
+  `PE` power electronics, `MATH` mathematics, `SEN` sensors, `CODE` programming, `GEN` for
+  anything unclassified. Register a new code in `INDEX.md` when the folder is created, and
+  never reuse a code for a different subject.
+- **The folder states the type; the name states the subject.** That is why suffixes such as
+  `-讲解页` or `-笔记` disappear: `explain/E01-buck-电路图与工作原理.html` already says it is
+  an explainer page, and the folder keeps it out of the note list.
+- Prefixes: `N` note, `R` review page, `E` explainer page. Two digits, assigned in creation
+  order within the folder, **never renumbered and never reused** — links and the user's memory
+  survive a deletion. Widen to three digits only if a folder passes 99.
+- Keep the point name in the user's own language after the prefix. The ASCII prefix keeps
+  sorting and linking stable; the native name keeps it recognisable. No dates in file names —
+  the date lives inside the file.
+- `figures/` belongs to the subject folder and is named after the page that uses it, e.g.
+  `figures/R01-i-d-comparison.svg`.
+
+Sorting matters more than it looks. With prefixes a folder view reads `N01 N02 R01 R02 E01`,
+grouped by type and stable at thirty files. Without them, a folder of bare titles has no
+stable order and no way to tell a note from an explainer page.
+
+### Migrating a flat folder
+
+When the user already has a flat folder, propose the mapping and **move nothing until they
+agree** — their files, their call.
+
+| Old | New |
+| --- | --- |
+| `<point>.md` | `PE-<subject>/notes/N01-<point>.md` |
+| `<subject>-讲解页.html` | `PE-<subject>/explain/E01-<subject>.html` |
+| `figures/` | `PE-<subject>/figures/` |
+| `INDEX.md` | stays at the root; its status table gains a page column |
+
+Migrate in one pass, keep the numbers monotonic (oldest point gets `N01`), and say what was
+renamed. Do not renumber later to "tidy up".
+
+## Note format
+
+One short note per knowledge point. Short enough to reread in a minute. A stable field set:
 
 ```markdown
 ---
@@ -41,9 +110,87 @@ last-review: <date>
 **Last review result** — passed / failed, and what broke.
 ```
 
-Keep an `INDEX.md` that lists the current goal, the depth tier, and links to the notes.
-Relations are links between notes, not a directory tree: prerequisite, easily confused with,
-and transfers-to are the ones worth recording.
+Keep an `INDEX.md` at the notes root with the current goal, the depth tier, and a status
+table whose first column links to the review page. Relations are links between notes, not a
+directory tree: prerequisite, easily confused with, and transfers-to are the ones worth
+recording.
+
+## The review page
+
+A page exists so the user can re-learn a point **without starting a session**. It is opened
+from the folder, works offline, and remembers what was already mastered.
+
+### What a page must contain
+
+| Section | Required | Content |
+| --- | --- | --- |
+| Header | yes | point name, code (`R01`), status chip, last review date, next review date |
+| Recap | yes | 3–5 lines on the mechanism, plus the one figure that carries the shape |
+| Quiz | yes | 4–8 single-choice questions, local verdict, one "why" line per question |
+| Map | yes, when the point has two or more neighbours | relation graph; every node links to the sibling page |
+| Links | yes | sibling pages, explainer pages, and the `N` note file |
+| Next action | yes | what to do per score band, written before the user asks |
+
+Keep that order. A page with a quiz and no recap is a test, not a review page.
+
+### Interaction rules
+
+- **Every judgement is local.** Clicking an option shows right or wrong inside the page and
+  sends nothing. The page never calls the network.
+- A wrong answer reveals the "why" immediately; a correct one leaves it collapsed so the
+  reason can still be checked.
+- Two consecutive correct answers retire a question from the wrong-question pool; one wrong
+  answer resets its streak. "Only the wrong ones" filters to the live pool.
+- Every question is single choice. Multi-select makes re-checking slow and the verdict fuzzy;
+  one choice plus a "why" line tests the mechanism, which is the point.
+- The explanation must name **the error the user actually made**, not the textbook fact. A
+  "why" that reads like a definition means the note was copied instead of the mistake.
+- Progress persists in `localStorage` under `review:<CODE>-<NN>`, wrapped in `try/catch`.
+  When storage is unavailable, say so in the page and keep working — never block on it.
+- A button that needs the assistant assembles a **complete** prompt and copies it. Label it
+  `复制…`, not `发送…`: a local page cannot send, and a label that lies is worse than no
+  button. Fall back to showing the prompt in a `<textarea>` when the clipboard is blocked.
+- Buttons, not radios, for the options: real `<button>` elements with `aria-pressed` are
+  reachable with Tab and Enter. Do not claim a radio-group pattern without implementing arrow
+  navigation. Bind with `addEventListener`, never inline handlers.
+
+### Technical constraints
+
+- **One file, no CDN, no build step, no framework.** No KaTeX, MathJax, web fonts, or icon
+  URLs: the page is opened from `file://` on a machine that may be offline. Write formulas as
+  `U<sub>d</sub>`, `<i>α</i>`, `π + α`.
+- Flat visual language, same as the cards: solid fills, 1px borders, 8–12px radius, no
+  gradients, shadows, glow, or emoji.
+- Light and dark through `prefers-color-scheme` and CSS variables. Check both.
+- Add a `@media print` block — a printed page is a legitimate offline review.
+- Reading survives with JavaScript disabled: the recap, the map, and the questions are static
+  markup; the script only adds judgement and memory.
+
+### Building one
+
+1. Copy the worked example listed in the skill index. Keep its styles and script; replace the
+   content.
+2. Fill the header from the note's front matter: same title, same status, same dates.
+3. Write the recap from the note's conclusion and why fields — same mechanism, more prose, no
+   new claims.
+4. Write 4–8 questions. At least one must be a question the user has **already answered
+   wrong**; keep the wrong option as a distractor and put the real error in its "why".
+5. Draw the map from the note's relations. Mark a neighbour without a page as `待建` and
+   leave it unlinked rather than linking to a file that does not exist.
+6. Set the next review date from the status: `failed` +1 day, `shaky` +3 days,
+   `mastered` +14 days, `not-learned` no date.
+7. Save as `review/R<NN>-<point>.html`, then add its row to `INDEX.md`.
+
+### Check before claiming it works
+
+- Click a wrong option: the verdict, the "why", and the wrong-pool counter must update with
+  no network access.
+- Grep the file for `http` — every hit must be a comment or a link the user is meant to
+  follow, never a `<script src>`, `<link href>`, or `url(...)`.
+- Check every relative `href` against the real folder. A page linking to a sibling that does
+  not exist is worse than one with no map.
+- Reload: mastered questions stay mastered, and nothing throws when storage is blocked.
+- Look at it in both themes. Unreadable dark mode counts as broken.
 
 ## Offering and setting up Obsidian
 
@@ -75,8 +222,12 @@ Notes never go inside the skill directory.
 
 ## Reading format first
 
-The default output must be **plain Markdown that any editor can read**. `[[wikilinks]]` are
-just text in a plain viewer and still convey the relation. This is the required baseline.
+The **note** must stay plain Markdown that any editor can read. `[[wikilinks]]` are just text
+in a plain viewer and still convey the relation. This is the required baseline.
+
+The **review page** is HTML, because its job is interaction and it cannot do that in
+Markdown. It stays a single self-contained file with no dependency, so it is still "plain"
+in the sense that matters: it opens anywhere, forever.
 
 Enhanced formats are optional and only applied when the user has the corresponding tool:
 
@@ -86,8 +237,8 @@ Enhanced formats are optional and only applied when the user has the correspondi
   node and that the JSON parses before claiming the map is done.
 - A tabular index of points, mastery state, and last review result.
 
-If the enhanced tool is missing, degrade to the plain Markdown baseline without losing any
-content. Never make the network depend on a specific app.
+If the enhanced tool is missing, degrade to the plain baseline without losing any content.
+Never make the network depend on a specific app.
 
 ## Incremental maintenance
 
@@ -96,8 +247,15 @@ content. Never make the network depend on a specific app.
 - Do not wait for the user to declare the task finished. Reaching a stage goal or an explicit
   request is enough.
 - When a review fails, update `last-review` and the result field, and lower `status`.
-- Notes are **user data**. They live in the user's own project or vault directory, never
-  inside the skill directory. The skill stays stateless.
+- **A failed check is not only a status change: it becomes a question on the page.** That is
+  the loop closing. Add the question, keep the user's wrong option as a distractor, and put
+  the real error in the "why".
+- Do not build a page per point on day one. Build one when a stage ends, when a point is
+  `shaky` or `failed`, or when the user asks.
+- Edit a page in place instead of regenerating it: question ids (`data-q`) key the stored
+  progress, so keep existing ids stable when adding questions.
+- Notes and pages are **user data**. They live in the user's own project or vault directory,
+  never inside the skill directory. The skill stays stateless.
 
 ## Common failure modes
 
@@ -107,6 +265,14 @@ content. Never make the network depend on a specific app.
 - Writing notes once and never revisiting them. The review field is what keeps the network
   alive.
 - Making the notes depend on a plugin, so they become unreadable after a change of tools.
+- A review page that is the note re-typed in HTML. If it reads like the note, it will not be
+  reread.
+- Twenty questions to feel thorough. Four to eight mechanism questions beat twenty
+  definitions, and a long bank is a bank nobody finishes.
+- A page that needs a server, a CDN, or a build step, and is blank the first time the user is
+  offline.
+- Renumbering files after a deletion, which breaks every link and every note the user
+  remembers by number.
 
 ## Source discipline
 

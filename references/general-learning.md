@@ -232,6 +232,12 @@ The long-term note is a deliverable, not a transcript.
   / transfers to), one review question, and the last review result.
 - Relations matter more than hierarchy. Express them as links between notes, not as a
   directory tree.
+- A note is for the assistant, a review page is for the user. Keep both: the note restores
+  state, the page is what actually gets reopened. A page that reads like the note will not be
+  reread, and a note that reads like a page is too long to resume from.
+- The review page is one self-contained HTML file with local judgement, no network access, and
+  no build step. It carries a recap, single-choice questions with a wrong-question pool, a
+  relation map, and links to its neighbours.
 - Notes are **incremental**: append or update them when a point is learned or reviewed. Do
   not generate one big document at the end, and do not wait for the user to declare the task
   finished.

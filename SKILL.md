@@ -30,7 +30,8 @@ lecturing more.
 4. **Drive by task or question** — explain briefly, then make the user do, predict, explain,
    or decide.
 5. **Verify** — check demonstrated understanding, not the feeling of having understood.
-6. **Consolidate** — append short linked notes and schedule a later re-check.
+6. **Consolidate** — append short linked notes and schedule a later re-check. At a stage end, or
+   for a point that just failed, also build the review page the user will reopen on their own.
 
 The loop repeats per knowledge point. Rules for each step live in `references/general-learning.md`.
 An explicit one-off explanation request uses the short version described in the guard below.
@@ -104,6 +105,7 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | `assets/inline-card-multi-blank.html` | Need a several-blanks-in-one-question card example |
 | `assets/inline-card-question-set.html` | Need a multi-question diagnostic card example |
 | `assets/figure-waveform-example.svg` | Need a worked example of a labelled waveform figure |
+| `assets/review-page-example.html` | Need the user-facing review page: recap, wrong-question redo, relation map, links |
 | `scripts/draw-waveform-example.py` | Need a runnable, dependency-free script that emits a waveform SVG |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
 
@@ -125,6 +127,8 @@ Missing capabilities reduce presentation richness, never content or honesty:
 - No retrieval tool → say what the explanation is based on; never invent sources.
 - No execution environment → mark conclusions as static analysis, not verified.
 - No note-taking tool → plain Markdown files with `[[wikilinks]]` still work.
+- Browser blocks local storage → the review page keeps working for the current visit; say the
+  progress will not be saved instead of hiding the fact.
 
 Never claim a tool, page, file, or command was used unless it actually was.
 
@@ -142,6 +146,6 @@ Honour these at any point, in natural language or as short commands:
 
 ## State lives outside this skill
 
-Progress, mastery, misconceptions, and notes are **session or user data**, never written into
-this skill directory. The skill stays stateless and cacheable. Notes go to the user's own
-project or vault directory.
+Progress, mastery, misconceptions, notes, and review pages are **session or user data**, never
+written into this skill directory. The skill stays stateless and cacheable. Notes and pages go
+to the user's own project or vault directory.

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>R01 · 停止触发不是新稳态 — 复习页</title>
+<style>
+  *{box-sizing:border-box}
+  :root{
+    --bg:#f6f6f4; --card:#ffffff; --ink:#1c1c1e; --mute:#6b6b70; --line:#e2e2dd;
+    --ok:#176b41; --ok-bg:#eaf4ee; --no:#a8271f; --no-bg:#fceceb;
+    --accent:#2f5fd0; --accent-bg:#eef2fc; --warn:#7a5100; --warn-bg:#fbf2e2;
+    --r:12px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#161719; --card:#1e1f22; --ink:#e9ebee; --mute:#9aa0a8; --line:#33353a;
+      --ok:#5ecf94; --ok-bg:#14291d; --no:#f08a82; --no-bg:#2f1917;
+      --accent:#93b2f6; --accent-bg:#1a2336; --warn:#dfb168; --warn-bg:#2b2213;
+    }
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:880px;margin:0 auto;padding:40px 20px 72px}
+  [hidden]{display:none !important}
+  h1{font-size:26px;line-height:1.3;margin:6px 0 6px;font-weight:600}
+  h2{font-size:15px;margin:0;font-weight:600}
+  p{margin:0 0 10px}
+  .eyebrow{margin:0;font-size:12px;letter-spacing:.04em;color:var(--mute)}
+  .sub{margin:0 0 16px;color:var(--mute);font-size:14px}
+  .chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0 0 28px}
+  .chip{font-size:12px;padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--mute);background:var(--card)}
+  .chip-warn{color:var(--warn);background:var(--warn-bg);border-color:transparent}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;margin:0 0 18px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .recap-grid{display:grid;gap:18px;align-items:start}
+  @media (max-width:720px){.recap-grid{grid-template-columns:1fr}}
+  .points{margin:0;padding-left:20px}
+  .points li{margin:0 0 8px}
+  .fig{margin:0}
+  .fig svg{width:100%;max-width:620px;height:auto;display:block;margin:0 auto;border:1px solid var(--line);border-radius:8px;background:transparent}
+  .fig figcaption{color:var(--mute);font-size:12px;margin-top:8px;line-height:1.6}
+  .ax{stroke:var(--line);stroke-width:1}
+  .cv{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+  .cv-b{stroke:var(--warn)}
+  .sh{fill:var(--warn-bg)}
+  .mk{stroke:var(--mute);stroke-width:1;stroke-dasharray:4 4}
+  .tx{fill:var(--mute);font-size:11px;font-family:inherit}
+  .lb{fill:var(--ink);font-size:12px;font-family:inherit}
+  .quiz-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
+    padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .bar-btns{display:flex;flex-wrap:wrap;gap:8px}
+  #stat{font-size:12px;color:var(--mute)}
+  button{font:inherit;cursor:pointer}
+  .ghost{font-size:12px;padding:5px 12px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink)}
+  .ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .ghost[aria-pressed="true"]{background:var(--accent-bg);border-color:transparent;color:var(--accent)}
+  .solid{font-size:12px;padding:5px 12px;border:1px solid transparent;border-radius:8px;background:var(--accent);color:#fff}
+  @media (prefers-color-scheme: dark){.solid{color:#101216}}
+  .ring-wrap{display:flex;align-items:center;gap:8px;color:var(--mute);font-size:12px}
+  .ring{width:34px;height:34px;transform:rotate(-90deg)}
+  .ring-bg{fill:none;stroke:var(--line);stroke-width:4}
+  .ring-fg{fill:none;stroke:var(--ok);stroke-width:4;stroke-linecap:round;
+    stroke-dasharray:100.5;stroke-dashoffset:100.5;transition:stroke-dashoffset .25s ease}
+  .q{padding:18px 0 4px;border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:0}
+  .q[hidden]{display:none}
+  .q-text{margin:0 0 12px;font-size:15px}
+  .q-no{display:inline-block;min-width:20px;color:var(--mute);font-variant-numeric:tabular-nums}
+  .opts{display:grid;gap:8px;margin:0 0 12px}
+  .opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;
+    padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--ink);
+    font-size:14px;line-height:1.6}
+  .opt:hover{border-color:var(--accent)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt .k{color:var(--mute);font-size:12px;min-width:14px}
+  .opt.right{background:var(--ok-bg);border-color:var(--ok)}
+  .opt.wrong{background:var(--no-bg);border-color:var(--no)}
+  .opt.right .k,.opt.wrong .k{color:inherit}
+  .fb{margin:0 0 10px;padding:10px 12px;border-radius:9px;font-size:13.5px;line-height:1.7}
+  .fb[data-verdict="ok"]{background:var(--ok-bg);color:var(--ok)}
+  .fb[data-verdict="no"]{background:var(--no-bg);color:var(--no)}
+  .fb[data-verdict="ok"] .fb-no,.fb[data-verdict="no"] .fb-ok{display:none}
+  .fb p:last-child{margin-bottom:0}
+  .q-foot{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:10px;padding-bottom:14px}
+  .why{font-size:13.5px;color:var(--mute)}
+  .why summary{cursor:pointer;color:var(--accent);font-size:12.5px}
+  .why p{margin:8px 0 0;color:var(--ink)}
+  .ask{font-size:12px;padding:4px 10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--mute)}
+  .ask:hover{border-color:var(--accent);color:var(--accent)}
+  .q[data-mastered="1"]{background:var(--ok-bg);border-radius:10px;padding-left:12px;padding-right:12px;border-top-color:transparent}
+  .q[data-mastered="1"] .q-no{color:var(--ok)}
+  .toast{margin:12px 0 0;font-size:12.5px;color:var(--accent)}
+  .plan-box{width:100%;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:8px;
+    background:var(--bg);color:var(--ink);font:12.5px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;resize:vertical}
+  .empty{margin:16px 0 0;font-size:13px;color:var(--mute)}
+  .next{margin:16px 0 0;padding:12px 14px;background:var(--accent-bg);border-radius:9px;font-size:13.5px;color:var(--ink)}
+  .next b{font-weight:600}
+  .map{width:100%;height:auto;display:block}
+  .edge{stroke:var(--line);stroke-width:1.5}
+  .edge-lb{fill:var(--mute);font-size:10.5px;paint-order:stroke;stroke:var(--card);stroke-width:4px;stroke-linejoin:round}
+  .node rect{fill:var(--bg);stroke:var(--line);stroke-width:1.5;rx:9}
+  .node text{fill:var(--ink);font-size:12px}
+  .node .sub2{fill:var(--mute);font-size:10.5px}
+  a.node:hover rect,a.node:focus-visible rect{stroke:var(--accent);fill:var(--accent-bg)}
+  .node-self rect{fill:var(--accent-bg);stroke:var(--accent)}
+  .node-todo rect{stroke-dasharray:5 4;fill:transparent}
+  .node-todo text{fill:var(--mute)}
+  .links{list-style:none;padding:0;margin:0}
+  .links li{padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}
+  .links li:first-child{border-top:0}
+  .links a{color:var(--accent);text-decoration:none}
+  .links a:hover{text-decoration:underline}
+  .links span{color:var(--mute);font-size:12px;margin-left:8px}
+  .foot{color:var(--mute);font-size:12px;margin-top:24px;line-height:1.8}
+  @media print{
+    body{background:#fff}
+    .bar-btns,.ask,.toast,.plan-box,#links{display:none !important}
+    .card{border-color:#ccc;break-inside:avoid}
+    .q[hidden]{display:block !important}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <p class="eyebrow">PE-电力电子技术 · 复习页 R01</p>
+    <h1>停止触发不是新稳态</h1>
+    <p class="sub">判据是电流过零、之后不再承受正向电压——不是电压过零。</p>
+    <ul class="chips">
+      <li class="chip chip-warn">状态：shaky</li>
+      <li class="chip">上次检查 2026-11-15 · 未通过</li>
+      <li class="chip">下次复习 2026-11-18</li>
+      <li class="chip" id="visits">本页第 1 次打开</li>
+    </ul>
+  </header>
+
+  <section class="card" id="recap" aria-labelledby="recap-h">
+    <div class="card-head"><h2 id="recap-h">一页速记</h2></div>
+    <div class="recap-grid">
+      <ol class="points">
+        <li>关断的判据是<b>电流降到维持电流以下</b>，且之后不再承受正向电压；电压过零只是让电流有机会下降。</li>
+        <li>阻感负载电流连续时，正在导通的那对管子没有「下一对」来接电流，电感把电流按原方向顶住，管子继续导通。</li>
+        <li>停止触发后，u<sub>d</sub> 变负，电感储能经导通管与负载放完，电流单调衰减到零——这是一次<b>暂态</b>，不是新的周期稳态。</li>
+        <li>电阻负载 i<sub>d</sub> 与 u<sub>d</sub> 同形，电压过零电流同步到零，不需要换流通路，自然关断。</li>
+        <li>半波整流本身仍要每周期触发一次，这恰好反证「停止触发还能周期性工作」不成立。</li>
+      </ol>
+      <figure class="fig">
+        <svg viewBox="0 0 480 210" role="img" aria-label="电阻负载与阻感负载在停止触发后的电流对比：电阻负载电流已到零，阻感负载电流仍大于零并缓慢衰减">
+          <line class="ax" x1="100" y1="48" x2="450" y2="48"/>
+          <line class="ax" x1="100" y1="170" x2="450" y2="170"/>
+          <line class="ax" x1="100" y1="16" x2="100" y2="186"/>
+
+          <rect class="sh" x="300" y="132" width="112" height="38"/>
+
+          <path class="cv" d="M100,48 Q132,-8 165,48"/>
+          <path class="cv" d="M230,48 Q262,-8 295,48"/>
+
+          <polyline class="cv cv-b" points="100,158 125,140 150,158 175,140 200,158 225,140 250,158 275,140 300,158"/>
+          <path class="cv cv-b" d="M300,158 C332,165 366,169 412,170 L450,170"/>
+
+          <line class="mk" x1="300" y1="10" x2="300" y2="192"/>
+
+          <text class="lb" x="6" y="24">电阻负载</text>
+          <text class="tx" x="6" y="40">i<tspan baseline-shift="sub" font-size="0.72em">d</tspan></text>
+          <text class="lb" x="6" y="148">阻感负载</text>
+          <text class="tx" x="6" y="164">i<tspan baseline-shift="sub" font-size="0.72em">d</tspan></text>
+
+          <text class="tx" x="454" y="52">ωt</text>
+          <text class="tx" x="454" y="174">ωt</text>
+          <text class="lb" x="306" y="10">停止触发</text>
+          <text class="tx" x="306" y="40">电流已到零</text>
+          <text class="tx" x="306" y="122">i<tspan baseline-shift="sub" font-size="0.72em">d</tspan> 仍 &gt; 0：没有换流对象</text>
+          <text class="tx" x="306" y="192">电流归零后才全部关断</text>
+        </svg>
+        <figcaption>示意（理想模型）：同一时刻停止触发。上面电阻负载的电流早已自然到零；下面阻感负载的电流仍在导通区间内，只能靠储能放完。</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="card" id="quiz" aria-labelledby="quiz-h">
+    <div class="card-head">
+      <h2 id="quiz-h">错题重刷</h2>
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 40 40" aria-hidden="true">
+          <circle class="ring-bg" cx="20" cy="20" r="16"/>
+          <circle class="ring-fg" id="ring" cx="20" cy="20" r="16"/>
+        </svg>
+        <span id="ringLabel">0/4</span>
+      </div>
+    </div>
+
+    <div class="quiz-bar">
+      <span id="stat">已答 0 / 4 · 待重刷 0 · 已掌握 0</span>
+      <div class="bar-btns">
+        <button type="button" class="ghost" id="onlyWrong" aria-pressed="false">只刷错题</button>
+        <button type="button" class="ghost" id="resetAll">重置进度</button>
+        <button type="button" class="solid" id="copyPlan">复制复习指令</button>
+      </div>
+    </div>
+
+    <p class="toast" id="toast" role="status" hidden></p>
+    <textarea class="plan-box" id="planBox" rows="4" readonly hidden aria-label="复习指令"></textarea>
+    <p class="empty" id="empty" hidden>没有待重刷的错题。再点一次「只刷错题」可以回到全部题目。</p>
+
+    <div id="bank">
+
+      <article class="q" data-q="q1" data-answer="b">
+        <p class="q-text"><span class="q-no">1</span>阻感负载单相桥式全控整流电路，停止给下一对晶闸管发脉冲后，正在导通的那对管子为什么关不断？</p>
+        <div class="opts" role="group" aria-label="第 1 题选项">
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>门极上还有触发脉冲，晶闸管保持导通</span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>没有另一对管子接过电流，电感维持的电流无处转移</span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>阳极电压还没有过零，所以不能关断</span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>门极电流不足，不足以维持导通</span></button>
+        </div>
+        <div class="fb" aria-live="polite" hidden>
+          <p class="fb-ok">对。关断靠电流：电流降到维持电流以下、且之后不再承受正向电压。这里卡在「电流降不下来」——没有下一对管子接电流，电感把电流按原方向顶住。</p>
+          <p class="fb-no">看电流，不看电压。停止触发只是不再换流；没有另一对管子接过电流，电感维持的电流没有去处，管子只能继续导通。</p>
+        </div>
+        <div class="q-foot">
+          <details class="why"><summary>为什么</summary><p>晶闸管是半控器件：门极只能开通，关断靠电流。停止触发取消的是「下一对管子的开通时刻」，正在导通这对管子的正向电压和电流都还在，所以它维持导通。</p></details>
+          <button type="button" class="ask" hidden>追问这题</button>
+        </div>
+      </article>
+
+      <article class="q" data-q="q2" data-answer="b">
+        <p class="q-text"><span class="q-no">2</span>阻感负载全控桥停止触发后，电路进入什么状态？</p>
+        <div class="opts" role="group" aria-label="第 2 题选项">
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>退化为半波整流，仍按周期工作</span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>一次暂态：电感储能经导通管与负载放完、电流归零后全部关断</span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>进入逆变状态，能量回馈电网并稳定运行</span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>立即全部关断，u<sub>d</sub> 立刻为零</span></button>
+        </div>
+        <div class="fb" aria-live="polite" hidden>
+          <p class="fb-ok">对。u<sub>d</sub> 在这段时间变负，把电感能量送回电源侧；电流单调衰减到零，之后所有管子关断。它不会自己变成另一种周期性工作方式。</p>
+          <p class="fb-no">半波整流本身仍要每周期触发一次，所以「停止触发 → 还能周期性工作」是自相矛盾的。这里发生的是一次暂态，不是新稳态。</p>
+        </div>
+        <div class="q-foot">
+          <details class="why"><summary>为什么</summary><p>电感储能只能经导通管与负载泄放，u<sub>d</sub> = −u<sub>2</sub> 的区间就是它在把能量送回电源。电流到零后，管子因电流不足以维持而关断，之后 u<sub>d</sub> 由负载决定，不再有周期波形。</p></details>
+          <button type="button" class="ask" hidden>追问这题</button>
+        </div>
+      </article>
+
+      <article class="q" data-q="q3" data-answer="a">
+        <p class="q-text"><span class="q-no">3</span>同样的停止触发，电阻负载为什么能自然关断？</p>
+        <div class="opts" role="group" aria-label="第 3 题选项">
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>电压过零时电流同步到零，没有电感储能需要泄放</span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>晶闸管在电压过零时自动产生关断信号</span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>电阻限流，管子因过热而关断</span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>失去门极脉冲后晶闸管立即关断</span></button>
+        </div>
+        <div class="fb" aria-live="polite" hidden>
+          <p class="fb-ok">对。电阻负载 i<sub>d</sub> 与 u<sub>d</sub> 同形，电压过零电流也过零，电流自然降到维持电流以下。阻感负载缺的正是这一步。</p>
+          <p class="fb-no">晶闸管没有「自动关断信号」，也不靠过热。区别只在电流能否过零：电阻负载能，阻感负载不能。</p>
+        </div>
+        <div class="q-foot">
+          <details class="why"><summary>为什么</summary><p>电阻负载 i<sub>d</sub> = u<sub>d</sub> / R，电压过零时电流同时到零；没有 L 的储能，也就没有「必须找到换流通路」这个问题。</p></details>
+          <button type="button" class="ask" hidden>追问这题</button>
+        </div>
+      </article>
+
+      <article class="q" data-q="q4" data-answer="b">
+        <p class="q-text"><span class="q-no">4</span>判断晶闸管能否关断，正确的判据是？</p>
+        <div class="opts" role="group" aria-label="第 4 题选项">
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>阳极电压是否过零</span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>阳极电流是否降到维持电流以下，且之后不再承受正向电压</span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>门极上是否还有触发脉冲</span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>触发角 α 是否大于 90°</span></button>
+        </div>
+        <div class="fb" aria-live="polite" hidden>
+          <p class="fb-ok">对。这是唯一能在波形上检验的判据：先看电流能不能降下来，再看关断后有没有正向电压把它重新开通。</p>
+          <p class="fb-no">电压过零只是让电流有机会下降，不是判据本身；触发脉冲和触发角都不决定关断。</p>
+        </div>
+        <div class="q-foot">
+          <details class="why"><summary>为什么</summary><p>两个条件都要满足：电流过零回答「能不能关」，之后的正向电压回答「会不会又被开通」。缺一个就会得出错误结论。</p></details>
+          <button type="button" class="ask" hidden>追问这题</button>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="next" id="nextAction">还没作答。先做完这 4 道，错题会自动进入重刷池。</p>
+  </section>
+
+  <section class="card" id="map" aria-labelledby="map-h">
+    <div class="card-head"><h2 id="map-h">知识关系图</h2></div>
+    <svg class="map" viewBox="0 0 700 320" role="img" aria-label="知识关系图：本页位于中心，四个相邻知识点分别标注为前置、易混、对照、迁移">
+      <line class="edge" x1="350" y1="160" x2="120" y2="46"/>
+      <line class="edge" x1="350" y1="160" x2="120" y2="274"/>
+      <line class="edge" x1="350" y1="160" x2="575" y2="46"/>
+      <line class="edge" x1="350" y1="160" x2="575" y2="274"/>
+
+      <text class="edge-lb" x="206" y="102" text-anchor="middle">前置</text>
+      <text class="edge-lb" x="206" y="224" text-anchor="middle">易混</text>
+      <text class="edge-lb" x="492" y="102" text-anchor="middle">对照</text>
+      <text class="edge-lb" x="492" y="224" text-anchor="middle">迁移</text>
+
+      <a class="node" href="./R02-晶闸管关断条件与换流.html">
+        <rect x="20" y="20" width="200" height="52"/>
+        <text x="120" y="44" text-anchor="middle">晶闸管关断条件与换流</text>
+        <text class="sub2" x="120" y="61" text-anchor="middle">R02 · 断链点</text>
+      </a>
+      <a class="node" href="./R03-负载性质决定整流波形.html">
+        <rect x="20" y="248" width="200" height="52"/>
+        <text x="120" y="272" text-anchor="middle">负载性质决定整流波形</text>
+        <text class="sub2" x="120" y="289" text-anchor="middle">R03 · 一次通过</text>
+      </a>
+      <a class="node" href="./R04-buck-拓扑与ccm-dcm边界.html">
+        <rect x="470" y="20" width="210" height="52"/>
+        <text x="575" y="44" text-anchor="middle">BUCK 拓扑与 CCM/DCM 边界</text>
+        <text class="sub2" x="575" y="61" text-anchor="middle">R04 · not-learned</text>
+      </a>
+      <g class="node node-todo">
+        <rect x="470" y="248" width="210" height="52"/>
+        <text x="575" y="272" text-anchor="middle">整流波形与器件应力</text>
+        <text class="sub2" x="575" y="289" text-anchor="middle">待建 · 分析底座第 2 条</text>
+      </g>
+      <g class="node node-self">
+        <rect x="240" y="134" width="220" height="52"/>
+        <text x="350" y="158" text-anchor="middle">停止触发不是新稳态</text>
+        <text class="sub2" x="350" y="175" text-anchor="middle">本页 R01</text>
+      </g>
+    </svg>
+  </section>
+
+  <section class="card" id="links" aria-labelledby="links-h">
+    <div class="card-head"><h2 id="links-h">相关文件</h2></div>
+    <ul class="links">
+      <li><a href="../notes/N01-停止触发不是新稳态.md">笔记原文 N01</a><span>给助手读的状态记录：结论、错因、关系、上次结果</span></li>
+      <li><a href="./R02-晶闸管关断条件与换流.html">R02 晶闸管关断条件与换流</a><span>前置，断链点，优先补</span></li>
+      <li><a href="./R03-负载性质决定整流波形.html">R03 负载性质决定整流波形</a><span>易混：电压过零只对电阻负载成立</span></li>
+      <li><a href="../explain/E01-buck-电路图与工作原理.html">E01 BUCK 电路图与工作原理</a><span>讲解页，一次性的图解</span></li>
+      <li><a href="../INDEX.md">INDEX.md</a><span>本文件夹的目录与状态表</span></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    本页是单文件、离线可用的复习页：进度只存在本机浏览器的 localStorage 里，不会上传，也不会自动发送任何消息。<br>
+    题目全部是选择题；点选项立即本地判定，连续两次答对即移出错题池。想让我出变式题时，用「复制复习指令」把结果带回去。
+  </p>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'review:PE-R01';
+  var articles = document.querySelectorAll('.q');
+  var TOTAL = articles.length;
+  var state = { q: {}, visits: 0, last: '' };
+  var storage = null;
+
+  try {
+    window.localStorage.setItem(KEY + ':probe', '1');
+    window.localStorage.removeItem(KEY + ':probe');
+    storage = window.localStorage;
+  } catch (e) { storage = null; }
+
+  var stat = document.getElementById('stat');
+  var ring = document.getElementById('ring');
+  var ringLabel = document.getElementById('ringLabel');
+  var nextAction = document.getElementById('nextAction');
+  var onlyWrong = document.getElementById('onlyWrong');
+  var resetAll = document.getElementById('resetAll');
+  var copyPlan = document.getElementById('copyPlan');
+  var toast = document.getElementById('toast');
+  var planBox = document.getElementById('planBox');
+  var empty = document.getElementById('empty');
+  var visits = document.getElementById('visits');
+
+  function load() {
+    if (!storage) { return; }
+    try {
+      var raw = storage.getItem(KEY);
+      if (!raw) { return; }
+      var parsed = JSON.parse(raw);
+      if (parsed && parsed.q) { state = parsed; }
+    } catch (e) { state = { q: {}, visits: 0, last: '' }; }
+  }
+
+  function save() {
+    if (!storage) { return; }
+    try { storage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* quota or private mode */ }
+  }
+
+  function rec(id) {
+    if (!state.q[id]) { state.q[id] = { n: 0, streak: 0, wrong: 0, last: '', ok: false }; }
+    return state.q[id];
+  }
+
+  function optsOf(article) { return article.querySelectorAll('.opt'); }
+
+  function paint(article, key, right) {
+    var opts = optsOf(article);
+    var i;
+    for (i = 0; i < opts.length; i++) {
+      opts[i].classList.remove('chosen');
+      opts[i].classList.remove('right');
+      opts[i].classList.remove('wrong');
+      opts[i].setAttribute('aria-pressed', 'false');
+    }
+    for (i = 0; i < opts.length; i++) {
+      if (opts[i].getAttribute('data-key') === key) {
+        opts[i].classList.add('chosen');
+        opts[i].classList.add(right ? 'right' : 'wrong');
+        opts[i].setAttribute('aria-pressed', 'true');
+      }
+    }
+    var fb = article.querySelector('.fb');
+    fb.setAttribute('data-verdict', right ? 'ok' : 'no');
+    fb.hidden = false;
+    var why = article.querySelector('.why');
+    if (why) { why.open = !right; }
+    var ask = article.querySelector('.ask');
+    if (ask) { ask.hidden = false; }
+  }
+
+  function answer(article, key) {
+    var id = article.getAttribute('data-q');
+    var right = key === article.getAttribute('data-answer');
+    var r = rec(id);
+
+    r.n = r.n + 1;
+    if (right) { r.streak = r.streak + 1; } else { r.streak = 0; r.wrong = r.wrong + 1; }
+    r.last = key;
+    r.ok = right;
+    state.last = 'answered';
+
+    if (r.streak >= 2) { article.setAttribute('data-mastered', '1'); }
+    else { article.removeAttribute('data-mastered'); }
+
+    paint(article, key, right);
+    update();
+    save();
+  }
+
+  function update() {
+    var answered = 0, live = 0, mastered = 0;
+    var i, r;
+    for (i = 0; i < articles.length; i++) {
+      r = rec(articles[i].getAttribute('data-q'));
+      if (r.n > 0) { answered = answered + 1; }
+      if (r.wrong > 0 && r.streak < 2) { live = live + 1; }
+      if (r.streak >= 2) { mastered = mastered + 1; }
+    }
+
+    stat.textContent = '已答 ' + answered + ' / ' + TOTAL + ' · 待重刷 ' + live + ' · 已掌握 ' + mastered;
+    ringLabel.textContent = mastered + '/' + TOTAL;
+    var C = 100.5;
+    ring.setAttribute('stroke-dasharray', String(C));
+    ring.setAttribute('stroke-dashoffset', String(C * (1 - mastered / TOTAL)));
+
+    if (mastered === TOTAL) {
+      nextAction.innerHTML = '<b>全部掌握。</b>下一步：让助手出一道迁移题（换负载性质或换触发角），确认不是记住了这四道。';
+    } else if (live > 0) {
+      nextAction.innerHTML = '<b>先重刷 ' + live + ' 道错题。</b>连续两次答对才算掌握；全部清空后再点「复制复习指令」让我出变式题。';
+    } else if (answered === 0) {
+      nextAction.innerHTML = '还没作答。先做完这 ' + TOTAL + ' 道，错题会自动进入重刷池。';
+    } else {
+      nextAction.innerHTML = '<b>再做一遍。</b>同一题连续两次答对才移出错题池，避免一次蒙对。';
+    }
+  }
+
+  function applyFilter() {
+    var only = onlyWrong.getAttribute('aria-pressed') === 'true';
+    var shown = 0;
+    var i, r, show;
+    for (i = 0; i < articles.length; i++) {
+      r = rec(articles[i].getAttribute('data-q'));
+      show = only ? (r.wrong > 0 && r.streak < 2) : true;
+      articles[i].hidden = !show;
+      if (show) { shown = shown + 1; }
+    }
+    empty.hidden = !(only && shown === 0);
+  }
+
+  function textOf(el) { return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; }
+
+  function answerText(article) {
+    var key = article.getAttribute('data-answer');
+    var opts = optsOf(article);
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].getAttribute('data-key') === key) { return textOf(opts[i]); }
+    }
+    return '';
+  }
+
+  function chosenText(article) {
+    var opts = optsOf(article);
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].classList.contains('chosen')) { return textOf(opts[i]); }
+    }
+    return '';
+  }
+
+  function copy(text, okMsg) {
+    var fallback = function () {
+      planBox.value = text;
+      planBox.hidden = false;
+      planBox.focus();
+      planBox.select();
+      toast.textContent = '浏览器不允许直接写剪贴板，指令已放在下面的框里，手动复制即可。';
+      toast.hidden = false;
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        toast.textContent = okMsg;
+        toast.hidden = false;
+      }, fallback);
+      return;
+    }
+    try {
+      planBox.value = text;
+      planBox.hidden = false;
+      planBox.focus();
+      planBox.select();
+      if (document.execCommand && document.execCommand('copy')) {
+        toast.textContent = okMsg;
+        toast.hidden = false;
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    fallback();
+  }
+
+  function planPrompt() {
+    var wrongNos = [], doneNos = [];
+    var i, r, n;
+    for (i = 0; i < articles.length; i++) {
+      r = rec(articles[i].getAttribute('data-q'));
+      n = i + 1;
+      if (r.wrong > 0 && r.streak < 2) { wrongNos.push(n); }
+      if (r.streak >= 2) { doneNos.push(n); }
+    }
+    var head = '复习 R01「停止触发不是新稳态」。';
+    if (wrongNos.length === 0 && doneNos.length === TOTAL) {
+      return head + '4 道题都已连续答对两次。请出一道迁移题（换负载性质或换触发角）检验是否真掌握，先让我判断，再给反馈；不要重讲整页内容。';
+    }
+    if (wrongNos.length === 0) {
+      return head + '本次错题重刷：暂无待重刷的错题。请按这 4 道题的知识点出一道变式题，先让我判断，再给反馈。';
+    }
+    return head + '本次错题重刷：第 ' + wrongNos.join('、') + ' 题仍错（待重刷）'
+      + (doneNos.length ? '，第 ' + doneNos.join('、') + ' 题已连续答对两次' : '')
+      + '。请只针对错题出 2 道变式题（换负载性质或换触发角），先让我判断，再给反馈；不要重讲整页内容。';
+  }
+
+  function askPrompt(article) {
+    var no = textOf(article.querySelector('.q-no'));
+    var body = textOf(article.querySelector('.q-text')).replace(/^\d+\s*/, '');
+    return '复习页 R01 第 ' + no + ' 题。题目：' + body
+      + ' 我的选择是：' + chosenText(article) + '。正确答案是：' + answerText(article)
+      + '。请只讲我这一步错在哪个判据上，用一句话给我一个能在波形上检验的方法，不要重讲整章。';
+  }
+
+  function bind(article) {
+    var opts = optsOf(article);
+    var i;
+    for (i = 0; i < opts.length; i++) {
+      (function (opt) {
+        opt.addEventListener('click', function () {
+          answer(article, opt.getAttribute('data-key'));
+          applyFilter();
+        });
+      })(opts[i]);
+    }
+    var ask = article.querySelector('.ask');
+    if (ask) {
+      ask.addEventListener('click', function () {
+        copy(askPrompt(article), '已复制这题的追问，粘贴到对话里即可。');
+      });
+    }
+  }
+
+  function restore() {
+    var i, r, id;
+    for (i = 0; i < articles.length; i++) {
+      id = articles[i].getAttribute('data-q');
+      r = rec(id);
+      if (r.streak >= 2) { articles[i].setAttribute('data-mastered', '1'); }
+      if (r.n > 0 && r.last) { paint(articles[i], r.last, r.ok); }
+    }
+  }
+
+  load();
+  restore();
+
+  for (var k = 0; k < articles.length; k++) { bind(articles[k]); }
+
+  onlyWrong.addEventListener('click', function () {
+    var now = onlyWrong.getAttribute('aria-pressed') === 'true';
+    onlyWrong.setAttribute('aria-pressed', now ? 'false' : 'true');
+    applyFilter();
+  });
+
+  resetAll.addEventListener('click', function () {
+    state = { q: {}, visits: state.visits, last: '' };
+    save();
+    for (var i = 0; i < articles.length; i++) {
+      articles[i].removeAttribute('data-mastered');
+      articles[i].hidden = false;
+      var opts = optsOf(articles[i]);
+      for (var j = 0; j < opts.length; j++) {
+        opts[j].classList.remove('chosen');
+        opts[j].classList.remove('right');
+        opts[j].classList.remove('wrong');
+        opts[j].setAttribute('aria-pressed', 'false');
+      }
+      var fb = articles[i].querySelector('.fb');
+      fb.hidden = true;
+      var why = articles[i].querySelector('.why');
+      if (why) { why.open = false; }
+      var ask = articles[i].querySelector('.ask');
+      if (ask) { ask.hidden = true; }
+    }
+    onlyWrong.setAttribute('aria-pressed', 'false');
+    empty.hidden = true;
+    toast.hidden = true;
+    planBox.hidden = true;
+    update();
+  });
+
+  copyPlan.addEventListener('click', function () {
+    copy(planPrompt(), '已复制复习指令，粘贴到对话里即可。');
+  });
+
+  state.visits = (state.visits || 0) + 1;
+  save();
+  visits.textContent = '本页第 ' + state.visits + ' 次打开' + (storage ? '' : '（本浏览器不允许保存进度）');
+
+  update();
+  applyFilter();
+})();
+</script>
+</body>
+</html>

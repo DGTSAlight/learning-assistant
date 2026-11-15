@@ -19,6 +19,11 @@ Self-contained rules for how an explanation is shown. These are means, not the c
 A long-term knowledge note is a **deliverable**, not a per-turn presentation. It follows the
 note rules, not this priority list.
 
+The same applies to the review page the user reopens weeks later. Build it from the note
+template by hand, **not** with the page renderer: it needs local judgement, a wrong-question
+pool, and stored progress, and a generated explainer page has none of those. An explainer page
+explains once; a review page is used repeatedly.
+
 ### When a page is the default, not an option
 
 Generate a page proactively when **any one** of these signals is present. One signal is enough.
