@@ -1,6 +1,6 @@
 {
   "skill": "learning-assistant",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "bilingual": true,
   "description": "Bilingual trigger eval set. Each case carries query (zh) and query_en (en) for the same intent; measure both languages when comparing trigger rates. Near-miss negatives matter more than obviously unrelated queries; each case should be run at least 3 times before comparing descriptions.",
   "queries": [
@@ -26,6 +26,8 @@
     { "id": 20, "query": "读一下这个文件，告诉我它有多少行", "query_en": "Read this file and tell me how many lines it has", "should_trigger": false, "expect_domain": "none", "note": "near miss: simple one-step lookup" },
     { "id": 21, "query": "线代期末想冲一下，帮我把特征值这块学明白", "query_en": "I want to push through linear algebra for the final; help me actually understand eigenvalues", "should_trigger": true, "expect_domain": "math", "note": "math domain, exam goal" },
     { "id": 22, "query": "电力电子这门课想搞懂整流和逆变，最好能在 Simulink 里搭出来", "query_en": "I want to understand rectifiers and inverters in my power electronics course, ideally build them in Simulink", "should_trigger": true, "expect_domain": "power-electronics", "note": "power electronics with simulation" },
-    { "id": 23, "query": "传感器与检测技术要考试了，压电式和热电偶我一直没分清", "query_en": "My sensors and measurement exam is coming; I still cannot tell piezoelectric and thermocouple sensors apart", "should_trigger": true, "expect_domain": "sensors", "note": "sensors domain, two families confused" }
+    { "id": 23, "query": "传感器与检测技术要考试了，压电式和热电偶我一直没分清", "query_en": "My sensors and measurement exam is coming; I still cannot tell piezoelectric and thermocouple sensors apart", "should_trigger": true, "expect_domain": "sensors", "note": "sensors domain, two families confused" },
+    { "id": 24, "query": "用学习助手的方式临时给我讲一下特征值是什么，不用做笔记", "query_en": "Use the learning assistant to give me a one-off explanation of eigenvalues, no notes please", "should_trigger": true, "expect_domain": "math", "note": "explicit one-off request for this skill; must not be refused" },
+    { "id": 25, "query": "就临时用这个 Skill 帮我讲讲 buck 电路的伏秒平衡，讲完就行", "query_en": "Just use this skill once to explain volt-second balance in a buck converter, that is all", "should_trigger": true, "expect_domain": "power-electronics", "note": "explicit one-off request, no full loop wanted" }
   ]
 }

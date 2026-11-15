@@ -51,23 +51,54 @@ items or over sampled points. A piecewise waveform with a firing angle, a negati
 commutation jump, and labelled instants (`alpha`, `pi`, `pi + alpha`) is not a discrete series;
 draw it.
 
-## 3. How to obtain the figure
+## 3. Choose the route by content type
 
-Try the routes in this order. Stop at the first one that yields a verified image.
+Pick the route from what the figure is, not from what is easiest to produce.
 
-1. **Draw it with a script** — preferred. Use Python with a plotting library when available.
-   When no plotting library is installed, a small Python script using only the standard library
-   can still emit a valid SVG (text paths, polylines, axes, labels). Hand-written SVG is equally
-   acceptable. This route is reproducible, needs no external source, avoids copyright issues,
-   and lets the axes and key instants be labelled exactly as the explanation needs.
-2. **Use a sourced figure** — only when textbook-level fidelity or a real device photo /
-   measurement plot is required. Give a verifiable source (book and edition, or a URL), state it
-   in the page, and respect its licence. A page does not load remote images: download the file to
-   a local absolute path before embedding. Never hard-fit a figure that shows a different
-   topology, different angle, or different axes. If the source or the file cannot be confirmed,
-   treat this route as failed and go to route 1 or the degradation table.
-3. **Do not invent an image.** Never claim a figure exists, never cite a figure number, and
-   never describe a plot that was not produced or retrieved.
+| Content | First choice | If it is unavailable |
+| --- | --- | --- |
+| Function plots, waveforms, characteristic curves — anything needing accurate axes, scale, or many computed points | Python + matplotlib | Ask the user: recommend an SVG sketch as the fallback, offer installing matplotlib as the alternative |
+| Complex circuit diagrams (many devices, bridge arms, gate drives), classic rectifier / inverter topologies, real device photos | Search for an existing sourced figure | Only when no suitable source is found, draw it and label it as a self-drawn sketch |
+| Simple diagrams: a few components, block relations, geometric sketches, timing bars | Hand-written SVG | — |
+
+Why this order: a hand-drawn complex bridge takes a long time, is easy to get wrong at the
+device level, and still lacks textbook detail; a sourced figure is faster and more reliable. A
+hand-drawn function curve cannot be numerically accurate, so a real plotting library wins there.
+
+### 3.1 Finding a Python that has matplotlib
+
+Do not test only the interpreter bundled with the agent. Check in this order:
+
+1. `python` / `python3` on PATH, and the agent's own interpreter.
+2. `conda env list` when `conda` is on PATH.
+3. The conda environment registry `~/.conda/environments.txt`
+   (`%USERPROFILE%\.conda\environments.txt` on Windows). It lists every environment conda knows
+   about **even when the `conda` command is not on PATH** — this is the usual reason a capable
+   environment is missed.
+4. Common roots: `~/miniconda3/envs/`, `~/anaconda3/envs/`,
+   `~/AppData/Local/miniconda3/envs/`, `C:/ProgramData/miniconda3/envs/`, `/opt/conda/envs/`,
+   plus project-local `envs/`, `.venv/`, `venv/`.
+5. For each candidate run `<python> -c "import matplotlib; print(matplotlib.__version__)"`.
+   Use the first one that succeeds and record the interpreter path actually used.
+
+If none has matplotlib, **ask the user before falling back**. State which interpreters were
+checked, ask whether they want to name a specific interpreter (a conda environment name is a
+common answer), and offer two options: draw an SVG sketch instead (recommended when only the
+shape matters), or install matplotlib into an existing environment with
+`<python> -m pip install matplotlib` and then plot. Never install a package without the user's
+agreement, and never claim matplotlib was unavailable without running the checks above.
+
+### 3.2 Searching for a sourced figure
+
+For a complex circuit, search first. Prefer a textbook figure with a named edition, official
+course material, a manufacturer application note or datasheet, or a reputable teaching page.
+Confirm the topology, device labels, load type, and firing angle actually match the case being
+taught. Give the source in the page, respect its licence, and download the image to a local
+absolute path before embedding — the page does not load remote images. If no suitable figure is
+found, say so, then draw it as a labelled self-drawn sketch that still needs checking against
+the textbook.
+
+Never invent a figure, a figure number, or a source.
 
 ## 4. Drawing requirements
 
@@ -84,6 +115,9 @@ Try the routes in this order. Stop at the first one that yields a verified image
   panels; do not overlay unrelated quantities.
 - Keep the figure readable at page width. Use flat colours and theme-safe contrast; do not rely
   on colour alone to distinguish curves — use dashes or labels too.
+- Show subscripts as subscripts. In page text put the symbol inside `$...$`; in SVG labels use
+  Unicode subscript characters or a `tspan`. A bare `u_d` reads as an underscore, not a
+  subscript.
 - Write the generated file to the user's own project or session output directory with a
   topic-based name. Never write session artefacts into this skill directory and never overwrite
   an existing file without asking.
@@ -126,10 +160,12 @@ When using the `answer-me-with-html` skill, embed a real local file, not a descr
 
 | Missing | Behaviour |
 | --- | --- |
-| No plotting library | Standard-library Python that emits SVG, or hand-written SVG |
+| No matplotlib in any discovered interpreter | **Ask the user first** (section 3.1): recommend an SVG sketch, offer installing matplotlib as an alternative |
+| A named interpreter fails | Report the exact error, try the next candidate, then ask |
+| No retrieval tool | For a complex circuit, say the search was unavailable and draw a labelled sketch |
+| No suitable sourced figure found | Say so, then draw it and label it a self-drawn sketch |
 | No script execution | Hand-written SVG fenced block inside the page |
 | Page cannot embed images | Produce the file anyway, give its path in the reply, keep a table as a companion, and say explicitly that the figure is not shown in the page |
-| No retrieval tool | Do not invent a source; draw an illustrative sketch from general mechanisms and label it as such |
 | No image inspection | Say the figure was not visually checked and mark it unverified |
 | No drawing ability at all | Structured text (a table plus a numbered description of the shape) **with an explicit note** that a circuit diagram or waveform is required here |
 

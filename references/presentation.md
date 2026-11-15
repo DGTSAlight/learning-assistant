@@ -56,11 +56,13 @@ belongs to which case is the failure mode to avoid.
 When the content is a circuit topology, a waveform, a characteristic curve, or a timing
 diagram, a table of attributes or a chain of flow boxes states the conclusion but does not show
 the shape. A panel that lists "resistive load: u_d = 0 / inductive load: u_d goes negative" has
-not shown the negative interval on a time axis. Add a real figure drawn with a script or SVG,
-and keep the table or flow box only as a companion. Read the figure reference listed in the
-skill index before producing any technical page. Do not let the page renderer's built-in
-components decide this: `chart` suits discrete numbers, `flow` suits causal order, and neither
-carries a piecewise waveform with a firing angle or a labelled conduction interval.
+not shown the negative interval on a time axis. Add a real figure and keep the table or flow
+box only as a companion. Pick the route by content type (the figure reference listed in the
+skill index gives the full method): matplotlib for function plots and waveforms, a sourced
+figure first for complex circuits, hand-written SVG for simple diagrams. Do not let the page
+renderer's built-in components decide this: `chart` suits discrete numbers, `flow` suits causal
+order, and neither carries a piecewise waveform with a firing angle or a labelled conduction
+interval.
 
 ## Pages are a supplement
 
@@ -69,6 +71,28 @@ into a page. After generating one, state its path and main panels so the user ca
 later. Skip a page only for one isolated fact with no relation, or a pure confirmation. Do not
 use "a sentence could answer it" to skip a page when a signal above is present. Content
 accuracy beats decoration.
+
+## Math and notation in explainer pages
+
+Page renderers typeset TeX at build time, not in the browser. **Only text inside `$...$` or
+`$$...$$` is typeset.** A bare `U_i`, `u_L`, or `t_on` in prose or a table cell stays plain text:
+the underscore is visible, the subscript is missing, and the CLI reports **no warning**. That is
+why a page can look partly rendered — a block formula is fine while every inline symbol in the
+body and the tables is not. This is a draft-writing error, not a renderer bug.
+
+- Wrap **every** symbol with a subscript, superscript, fraction, Greek letter, or operator in
+  `$...$` — in prose, lists, captions, **and table cells**. `$U_o = D U_i$` renders; `U_o = D U_i`
+  does not. Table cells support inline math.
+- Use braces for multi-character subscripts: `$t_{\mathrm{on}}$`, `$U_{o}$`, `$i_{L}$`. Never
+  write `$t_on$`, and never leave `t_on` bare.
+- Use `$$` on its own lines for a long or important formula; a block scrolls inside its panel.
+- A closing `$` followed directly by a letter or underscore does not close the formula: write
+  `$n$-th`, not `$n$th`. Put a space or punctuation after the closing `$`.
+- In a table cell write `\vert x \vert`, not `|x|` — the pipe breaks the table.
+- Do not use `\ref`, `\eqref`, or `\label`; `\tag{1}` works in a block.
+- **Inspect the rendered page** and check inline and table formulas. A clean render with zero
+  warnings proves nothing about subscripts, because bare text is not an error. Raw red TeX means
+  the syntax on that line must be fixed and the page rendered again.
 
 ## Inline card style
 

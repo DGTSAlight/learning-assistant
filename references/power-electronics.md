@@ -83,11 +83,13 @@ where a gain formula silently stops holding.
 
 **Real figures are mandatory here, not decorative.** For each topology, show the circuit with
 device labels and the conducting pair, then show the supply voltage, output voltage, and device
-current on a shared time axis with `alpha`, `pi`, and `pi + alpha` marked. Draw the figure with
-a script or SVG, label the idealising assumptions (no commutation overlap, no device drops,
-continuous current), and verify it before claiming it exists. A comparison table of resistive
-vs inductive load may accompany the waveforms but must never replace them; the same holds for
-a chain of flow boxes describing the negative-voltage interval.
+current on a shared time axis with `alpha`, `pi`, and `pi + alpha` marked. **For the circuit
+itself, search for a sourced figure first** — a full bridge with gate drives has too many
+elements to hand-draw reliably; only draw it when no suitable source is found. **For the
+waveforms, prefer matplotlib.** Label the idealising assumptions (no commutation overlap, no
+device drops, continuous current) and verify the result before claiming it exists. A comparison
+table of resistive vs inductive load may accompany the waveforms but must never replace them;
+the same holds for a chain of flow boxes describing the negative-voltage interval.
 
 ## 5. What "really understanding" means here
 

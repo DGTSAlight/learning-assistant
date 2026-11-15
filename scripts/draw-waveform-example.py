@@ -13,6 +13,7 @@ continuous load current. It is a teaching sketch, not a textbook figure.
 import argparse
 import math
 import os
+import re
 import xml.etree.ElementTree as ET
 
 W, H = 900, 590
@@ -44,10 +45,18 @@ def py(zero, value):
     return zero - value * AMP
 
 
+def rich(s):
+    """Render u_d, U_i, i_L as real SVG subscripts instead of bare underscores."""
+    return re.sub(r"_([A-Za-z])",
+                  lambda m: ('<tspan baseline-shift="sub" font-size="0.72em">%s</tspan>'
+                             % m.group(1)),
+                  esc(s))
+
+
 def txt(x, y, s, size=13, fill=TEXT, anchor="start", weight="400"):
     return ('<text x="%.1f" y="%.1f" font-family="system-ui, sans-serif" '
             'font-size="%d" font-weight="%s" fill="%s" text-anchor="%s">%s</text>'
-            % (x, y, size, weight, fill, anchor, esc(s)))
+            % (x, y, size, weight, fill, anchor, rich(s)))
 
 
 def line(x1, y1, x2, y2, color=AXIS, width=1.0, dash=None):

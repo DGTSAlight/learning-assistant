@@ -78,9 +78,10 @@ exactly the ability that fails there.
 - Prefer sources that state conditions and proofs, not formula collections.
 - For hand-written work, image input or OCR is required; otherwise transcribe.
 - When a condition, a counterexample, or a symbol ↔ picture link is explained, produce a real
-  plot or geometric figure (a script-generated SVG is enough), label the axes and the failing
-  condition, and state any simplifying assumption. A table of sample values is not a
-  substitute for the curve or the shape.
+  plot or geometric figure. Prefer matplotlib for curves that need numeric accuracy; ask the
+  user before falling back to an SVG sketch. Label the axes and the failing condition, and
+  state any simplifying assumption. A table of sample values is not a substitute for the curve
+  or the shape.
 - Do not invent page numbers, exercise numbers, theorem numbering, or exam scope.
 
 ## 7. Boundaries

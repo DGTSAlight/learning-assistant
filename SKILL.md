@@ -1,6 +1,6 @@
 ---
 name: learning-assistant
-description: This skill should be used for task-driven learning guidance. It diagnoses what the learner knows and where it is shallow, sets one verifiable goal at the wanted depth, fills only the gaps that goal needs, verifies understanding through tasks and questions, and leaves short linked notes for later review. Use it when the learner wants to be taught, quizzed, drilled, or crammed for an exam, says they never really understood something, asks to walk through code line by line, or wants a learning goal set. Trigger phrases include teach me, help me learn, quiz me, cram for the exam, walk me through this code, 教我, 带我学, 考考我, 期末速成, 这块我没真懂, 逐行讲讲, 我想学 X. Do not use it for one-off questions such as what is X or explain X, for pure task execution such as fixing a bug, running tests, generating a file, or looking up an API when there is no learning intent, or when the user asks for the answer only. Domain references exist for code, math, power electronics, and sensors; other subjects use the general layer.
+description: This skill should be used for task-driven learning guidance. It diagnoses shallow knowledge, sets one verifiable goal at the wanted depth, fills only the gaps that goal needs, verifies through tasks and questions, and leaves short linked notes. Use it when the learner wants to be taught, quizzed, drilled, or crammed for an exam, says they never really understood something, asks to walk through code line by line, wants a learning goal set, or explicitly asks this skill to explain one concept. Triggers include teach me, help me learn, quiz me, cram for the exam, walk me through this code, 教我, 带我学, 考考我, 期末速成, 这块我没真懂, 逐行讲讲, 我想学 X. Do not use it for one-off questions such as what is X or explain X without such a request, for pure task execution like fixing a bug, running tests, generating a file, or looking up an API when there is no learning intent, or when the user asks for the answer only. Domain references exist for code, math, power electronics, and sensors; other subjects use the general layer.
 agent_created: true
 metadata:
   version: "0.1.0"
@@ -33,6 +33,7 @@ lecturing more.
 6. **Consolidate** — append short linked notes and schedule a later re-check.
 
 The loop repeats per knowledge point. Rules for each step live in `references/general-learning.md`.
+An explicit one-off explanation request uses the short version described in the guard below.
 
 ## Offering the optional note tool
 
@@ -63,9 +64,16 @@ section: the default textbook is a fallback, not an assumption.
 
 ## Guard: confirm intent before starting
 
-This skill is for an ongoing learning process, not for answering questions. If the user asked
-a one-off question, answer it normally and do not start the loop. A false start costs the user
-an unwanted quiz; a confirmation costs one sentence.
+This skill is for an ongoing learning process, not for answering questions. If the user asked a
+one-off question with no learning intent, answer it normally and do not start the loop. A false
+start costs the user an unwanted quiz; a confirmation costs one sentence.
+
+**An explicit request overrides this.** When the user names this skill or asks for its way of
+teaching, diagnosing, or quizzing on a single concept, do not refuse with "this is a one-off
+question". Run a short, one-concept version of the loop: explain, set one check if it helps,
+then give feedback. Skip goal setting, depth tiers, the knowledge-network note, progress state,
+and scheduled review unless the user asks for them. Do not expand into a course or add a quiz
+the user did not request. If the user later wants the full process, start the loop then.
 
 ## Optional gates
 
@@ -107,9 +115,10 @@ reference. This file is the only index.
 Missing capabilities reduce presentation richness, never content or honesty:
 
 - No visual rendering tool → plain Markdown, fenced code, tables, LaTeX.
-- No plotting library or no image embedding → generate a local SVG with a standard-library
-  script or by hand, give its path, and say when it cannot be shown inline. A table of
-  attributes is never a substitute for a required circuit diagram or waveform.
+- No matplotlib in the default interpreter → check other interpreters and conda environments
+  before concluding it is missing, then ask whether to draw an SVG sketch or install it.
+- No image embedding → produce the file anyway and give its path. A table of attributes is
+  never a substitute for a required circuit diagram or waveform.
 - No inline-card support → describe the choice in text, still ask for a one-line reason, and
   offer the two reserved difficulty commands as plain text. Keep a multi-question diagnostic
   as one numbered set with one "answer all at once" instruction.

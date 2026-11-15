@@ -220,6 +220,8 @@ Speed and depth are not opposites here. Keep the **process** short and the **art
 - If a deadline is real, say which parts are being compressed and what risk that creates.
 - Do not cut a visual explainer to save turns when the content has cases or the learner is
   shaky. A short reply plus one page costs less than re-teaching a misconception.
+- In an explicit one-off explanation request, do not create a knowledge-network note or
+  schedule a review unless the user asks. Short-session mode overrides the note rule above.
 
 ## 10. Knowledge network principles
 
