@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>R01 · 停止触发不是新稳态 — 复习页</title>
+<title>R01 · 二分查找的区间定义 — 复习页</title>
 <style>
   *{box-sizing:border-box}
   :root{
@@ -99,6 +99,11 @@
   .empty{margin:16px 0 0;font-size:13px;color:var(--mute)}
   .next{margin:16px 0 0;padding:12px 14px;background:var(--accent-bg);border-radius:9px;font-size:13.5px;color:var(--ink)}
   .next b{font-weight:600}
+  .cell{fill:none;stroke:var(--line);stroke-width:1.5}
+  .cell-off{fill:none;stroke:var(--line);stroke-width:1.5;stroke-dasharray:5 4}
+  .hl{fill:var(--accent-bg)}
+  .ptr{stroke:var(--mute);stroke-width:1.2}
+  .vn{fill:var(--ink);font-size:12px;font-family:inherit}
   .map{width:100%;height:auto;display:block}
   .edge{stroke:var(--line);stroke-width:1.5}
   .edge-lb{fill:var(--mute);font-size:10.5px;paint-order:stroke;stroke:var(--card);stroke-width:4px;stroke-linejoin:round}
@@ -127,16 +132,15 @@
 </style>
 </head>
 <body>
-<main class="wrap" data-key="PE-R01" data-code="R01" data-title="停止触发不是新稳态">
-
+<main class="wrap" data-key="DEMO-R01" data-code="R01" data-title="二分查找的区间定义">
   <header>
-    <p class="eyebrow">PE-电力电子技术 · 复习页 R01</p>
-    <h1>停止触发不是新稳态</h1>
-    <p class="sub">判据是电流过零、之后不再承受正向电压——不是电压过零。</p>
+    <p class="eyebrow">示例科目 · 复习页 R01</p>
+    <h1>二分查找的区间定义</h1>
+    <p class="sub">区间是闭是开，决定 while 条件和指针更新——三者必须自洽。</p>
     <ul class="chips">
       <li class="chip chip-warn">状态：shaky</li>
-      <li class="chip">上次检查 2026-11-15 · 未通过</li>
-      <li class="chip">下次复习 2026-11-18</li>
+      <li class="chip">上次检查 2026-01-01 · 未通过</li>
+      <li class="chip">下次复习 2026-01-04</li>
       <li class="chip" id="visits">本页第 1 次打开</li>
     </ul>
   </header>
@@ -145,41 +149,61 @@
     <div class="card-head"><h2 id="recap-h">一页速记</h2></div>
     <div class="recap-grid">
       <ol class="points">
-        <li>关断的判据是<b>电流降到维持电流以下</b>，且之后不再承受正向电压；电压过零只是让电流有机会下降。</li>
-        <li>阻感负载电流连续时，正在导通的那对管子没有「下一对」来接电流，电感把电流按原方向顶住，管子继续导通。</li>
-        <li>停止触发后，u<sub>d</sub> 变负，电感储能经导通管与负载放完，电流单调衰减到零——这是一次<b>暂态</b>，不是新的周期稳态。</li>
-        <li>电阻负载 i<sub>d</sub> 与 u<sub>d</sub> 同形，电压过零电流同步到零，不需要换流通路，自然关断。</li>
-        <li>半波整流本身仍要每周期触发一次，这恰好反证「停止触发还能周期性工作」不成立。</li>
+        <li>先声明区间语义：闭区间 <code>[left, right]</code> 里 right 是候选，半开区间 <code>[left, right)</code> 里 right 不是。</li>
+        <li>闭区间配 <code>while (left &lt;= right)</code>，半开区间配 <code>while (left &lt; right)</code>；写反了要么漏掉最后一个元素，要么死循环。</li>
+        <li>收缩不能原地不动：闭区间写 <code>right = mid - 1</code>，半开区间写 <code>right = mid</code>，两边都要跨过已经排除的 mid。</li>
+        <li>循环结束时 left 是第一个「不小于 target」的位置——这个不变量比返回值本身更值得记。</li>
+        <li>判据不是「mid 等不等于 target」，而是「每轮区间是否真的变小、被排除的元素是否真的不含答案」。</li>
       </ol>
       <figure class="fig">
-        <svg viewBox="0 0 480 210" role="img" aria-label="电阻负载与阻感负载在停止触发后的电流对比：电阻负载电流已到零，阻感负载电流仍大于零并缓慢衰减">
-          <line class="ax" x1="100" y1="48" x2="450" y2="48"/>
-          <line class="ax" x1="100" y1="170" x2="450" y2="170"/>
-          <line class="ax" x1="100" y1="16" x2="100" y2="186"/>
+        <svg viewBox="0 0 480 190" role="img" aria-label="同一个数组、同一对指针，闭区间把 R 也算进候选，半开区间不算">
+          <rect class="hl" x="166" y="40" width="218" height="36"/>
+          <rect class="hl" x="166" y="120" width="162" height="36"/>
 
-          <rect class="sh" x="300" y="132" width="112" height="38"/>
+          <rect class="cell" x="110" y="40" width="50" height="36"/>
+          <rect class="cell" x="166" y="40" width="50" height="36"/>
+          <rect class="cell" x="222" y="40" width="50" height="36"/>
+          <rect class="cell" x="278" y="40" width="50" height="36"/>
+          <rect class="cell" x="334" y="40" width="50" height="36"/>
+          <rect class="cell" x="390" y="40" width="50" height="36"/>
 
-          <path class="cv" d="M100,48 Q132,-8 165,48"/>
-          <path class="cv" d="M230,48 Q262,-8 295,48"/>
+          <rect class="cell" x="110" y="120" width="50" height="36"/>
+          <rect class="cell" x="166" y="120" width="50" height="36"/>
+          <rect class="cell" x="222" y="120" width="50" height="36"/>
+          <rect class="cell" x="278" y="120" width="50" height="36"/>
+          <rect class="cell-off" x="334" y="120" width="50" height="36"/>
+          <rect class="cell" x="390" y="120" width="50" height="36"/>
 
-          <polyline class="cv cv-b" points="100,158 125,140 150,158 175,140 200,158 225,140 250,158 275,140 300,158"/>
-          <path class="cv cv-b" d="M300,158 C332,165 366,169 412,170 L450,170"/>
+          <text class="vn" x="135" y="63" text-anchor="middle">2</text>
+          <text class="vn" x="191" y="63" text-anchor="middle">5</text>
+          <text class="vn" x="247" y="63" text-anchor="middle">8</text>
+          <text class="vn" x="303" y="63" text-anchor="middle">12</text>
+          <text class="vn" x="359" y="63" text-anchor="middle">16</text>
+          <text class="vn" x="415" y="63" text-anchor="middle">23</text>
 
-          <line class="mk" x1="300" y1="10" x2="300" y2="192"/>
+          <text class="vn" x="135" y="143" text-anchor="middle">2</text>
+          <text class="vn" x="191" y="143" text-anchor="middle">5</text>
+          <text class="vn" x="247" y="143" text-anchor="middle">8</text>
+          <text class="vn" x="303" y="143" text-anchor="middle">12</text>
+          <text class="vn" x="359" y="143" text-anchor="middle">16</text>
+          <text class="vn" x="415" y="143" text-anchor="middle">23</text>
 
-          <text class="lb" x="6" y="24">电阻负载</text>
-          <text class="tx" x="6" y="40">i<tspan baseline-shift="sub" font-size="0.72em">d</tspan></text>
-          <text class="lb" x="6" y="148">阻感负载</text>
-          <text class="tx" x="6" y="164">i<tspan baseline-shift="sub" font-size="0.72em">d</tspan></text>
+          <line class="ptr" x1="191" y1="20" x2="191" y2="38"/>
+          <line class="ptr" x1="303" y1="20" x2="303" y2="38"/>
+          <line class="ptr" x1="191" y1="100" x2="191" y2="118"/>
+          <line class="ptr" x1="303" y1="100" x2="303" y2="118"/>
 
-          <text class="tx" x="454" y="52">ωt</text>
-          <text class="tx" x="454" y="174">ωt</text>
-          <text class="lb" x="306" y="10">停止触发</text>
-          <text class="tx" x="306" y="40">电流已到零</text>
-          <text class="tx" x="306" y="122">i<tspan baseline-shift="sub" font-size="0.72em">d</tspan> 仍 &gt; 0：没有换流对象</text>
-          <text class="tx" x="306" y="192">电流归零后才全部关断</text>
+          <text class="lb" x="191" y="16" text-anchor="middle">L</text>
+          <text class="lb" x="303" y="16" text-anchor="middle">R</text>
+          <text class="lb" x="191" y="96" text-anchor="middle">L</text>
+          <text class="lb" x="303" y="96" text-anchor="middle">R</text>
+
+          <text class="lb" x="4" y="54">闭区间</text>
+          <text class="tx" x="4" y="70">[L, R]</text>
+          <text class="lb" x="4" y="134">半开区间</text>
+          <text class="tx" x="4" y="150">[L, R)</text>
         </svg>
-        <figcaption>示意（理想模型）：同一时刻停止触发。上面电阻负载的电流早已自然到零；下面阻感负载的电流仍在导通区间内，只能靠储能放完。</figcaption>
+        <figcaption>同一个数组、同一对指针：上面闭区间把 R 也算进候选，下面半开区间不算（虚线格）。候选集合不一样，循环条件就必须不一样。</figcaption>
       </figure>
     </div>
   </section>
@@ -212,73 +236,73 @@
     <div id="bank">
 
       <article class="q" data-q="q1" data-answer="b">
-        <p class="q-text"><span class="q-no">1</span>阻感负载单相桥式全控整流电路，停止给下一对晶闸管发脉冲后，正在导通的那对管子为什么关不断？</p>
+        <p class="q-text"><span class="q-no">1</span>用闭区间 <code>[left, right]</code> 时，循环条件应该写成什么？</p>
         <div class="opts" role="group" aria-label="第 1 题选项">
-          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>门极上还有触发脉冲，晶闸管保持导通</span></button>
-          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>没有另一对管子接过电流，电感维持的电流无处转移</span></button>
-          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>阳极电压还没有过零，所以不能关断</span></button>
-          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>门极电流不足，不足以维持导通</span></button>
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span><code>while (left &lt; right)</code></span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span><code>while (left &lt;= right)</code></span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span><code>while (left + 1 &lt; right)</code></span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>都可以，只要循环里正确更新指针</span></button>
         </div>
         <div class="fb" aria-live="polite" hidden>
-          <p class="fb-ok">对。关断靠电流：电流降到维持电流以下、且之后不再承受正向电压。这里卡在「电流降不下来」——没有下一对管子接电流，电感把电流按原方向顶住。</p>
-          <p class="fb-no">看电流，不看电压。停止触发只是不再换流；没有另一对管子接过电流，电感维持的电流没有去处，管子只能继续导通。</p>
+          <p class="fb-ok">对。闭区间里 right 仍是候选元素，left == right 时还剩一个元素没检查，所以必须用 &lt;=。</p>
+          <p class="fb-no">用 &lt; 会漏掉 left == right 那一次，而那正好是最后一个候选。漏元素的 bug 大多出在这里。</p>
         </div>
         <div class="q-foot">
-          <details class="why"><summary>为什么</summary><p>晶闸管是半控器件：门极只能开通，关断靠电流。停止触发取消的是「下一对管子的开通时刻」，正在导通这对管子的正向电压和电流都还在，所以它维持导通。</p></details>
+          <details class="why"><summary>为什么</summary><p>循环条件不是背下来的，是从「区间里还剩几个候选」推出来的：闭区间的长度是 right - left + 1，等于 1 时还有元素，所以条件是 left &lt;= right。</p></details>
           <button type="button" class="ask" hidden>追问这题</button>
         </div>
       </article>
 
       <article class="q" data-q="q2" data-answer="b">
-        <p class="q-text"><span class="q-no">2</span>阻感负载全控桥停止触发后，电路进入什么状态？</p>
+        <p class="q-text"><span class="q-no">2</span>闭区间写法里，<code>nums[mid] &lt; target</code> 时应该怎么收缩？</p>
         <div class="opts" role="group" aria-label="第 2 题选项">
-          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>退化为半波整流，仍按周期工作</span></button>
-          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>一次暂态：电感储能经导通管与负载放完、电流归零后全部关断</span></button>
-          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>进入逆变状态，能量回馈电网并稳定运行</span></button>
-          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>立即全部关断，u<sub>d</sub> 立刻为零</span></button>
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span><code>left = mid</code></span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span><code>left = mid + 1</code></span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span><code>left = mid - 1</code></span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span><code>right = mid</code></span></button>
         </div>
         <div class="fb" aria-live="polite" hidden>
-          <p class="fb-ok">对。u<sub>d</sub> 在这段时间变负，把电感能量送回电源侧；电流单调衰减到零，之后所有管子关断。它不会自己变成另一种周期性工作方式。</p>
-          <p class="fb-no">半波整流本身仍要每周期触发一次，所以「停止触发 → 还能周期性工作」是自相矛盾的。这里发生的是一次暂态，不是新稳态。</p>
+          <p class="fb-ok">对。mid 已经判定过且小于 target，新区间从 mid + 1 开始，区间才真的变小。</p>
+          <p class="fb-no">mid 已经排除过了，必须跨过它。写 <code>left = mid</code> 区间原地不动，直接死循环。</p>
         </div>
         <div class="q-foot">
-          <details class="why"><summary>为什么</summary><p>电感储能只能经导通管与负载泄放，u<sub>d</sub> = −u<sub>2</sub> 的区间就是它在把能量送回电源。电流到零后，管子因电流不足以维持而关断，之后 u<sub>d</sub> 由负载决定，不再有周期波形。</p></details>
+          <details class="why"><summary>为什么</summary><p>收缩的唯一要求是「候选区间严格变小，且被排除的元素确实不含答案」。mid 既然已经比过，就不该留在区间里。</p></details>
           <button type="button" class="ask" hidden>追问这题</button>
         </div>
       </article>
 
-      <article class="q" data-q="q3" data-answer="a">
-        <p class="q-text"><span class="q-no">3</span>同样的停止触发，电阻负载为什么能自然关断？</p>
+      <article class="q" data-q="q3" data-answer="b">
+        <p class="q-text"><span class="q-no">3</span>循环结束时，<code>left</code> 的含义是什么？</p>
         <div class="opts" role="group" aria-label="第 3 题选项">
-          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>电压过零时电流同步到零，没有电感储能需要泄放</span></button>
-          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>晶闸管在电压过零时自动产生关断信号</span></button>
-          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>电阻限流，管子因过热而关断</span></button>
-          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>失去门极脉冲后晶闸管立即关断</span></button>
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>最后一个小于 target 的位置</span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>第一个不小于 target 的位置</span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>target 一定就在 left 处</span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>没有确定含义，只能靠返回值判断</span></button>
         </div>
         <div class="fb" aria-live="polite" hidden>
-          <p class="fb-ok">对。电阻负载 i<sub>d</sub> 与 u<sub>d</sub> 同形，电压过零电流也过零，电流自然降到维持电流以下。阻感负载缺的正是这一步。</p>
-          <p class="fb-no">晶闸管没有「自动关断信号」，也不靠过热。区别只在电流能否过零：电阻负载能，阻感负载不能。</p>
+          <p class="fb-ok">对。left 左边全部小于 target，left 及右边全部不小于 target。target 不存在时，left 恰好是它该插入的位置。</p>
+          <p class="fb-no">left 不是「找到了」的位置。target 不存在时它恰好是插入位置，这才是能直接用的结论。</p>
         </div>
         <div class="q-foot">
-          <details class="why"><summary>为什么</summary><p>电阻负载 i<sub>d</sub> = u<sub>d</sub> / R，电压过零时电流同时到零；没有 L 的储能，也就没有「必须找到换流通路」这个问题。</p></details>
+          <details class="why"><summary>为什么</summary><p>把不变量写下来：left 左侧全部 &lt; target，right 右侧全部 &gt; target。循环结束时不变量仍然成立，答案就落在边界上。</p></details>
           <button type="button" class="ask" hidden>追问这题</button>
         </div>
       </article>
 
       <article class="q" data-q="q4" data-answer="b">
-        <p class="q-text"><span class="q-no">4</span>判断晶闸管能否关断，正确的判据是？</p>
+        <p class="q-text"><span class="q-no">4</span>判断二分写得对不对，最可靠的检查是什么？</p>
         <div class="opts" role="group" aria-label="第 4 题选项">
-          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>阳极电压是否过零</span></button>
-          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>阳极电流是否降到维持电流以下，且之后不再承受正向电压</span></button>
-          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>门极上是否还有触发脉冲</span></button>
-          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>触发角 α 是否大于 90°</span></button>
+          <button type="button" class="opt" data-key="a" aria-pressed="false"><span class="k">A</span><span>用几组随机数据跑一遍，看结果对不对</span></button>
+          <button type="button" class="opt" data-key="b" aria-pressed="false"><span class="k">B</span><span>每轮确认区间确实变小，且被排除的元素确实不可能含答案</span></button>
+          <button type="button" class="opt" data-key="c" aria-pressed="false"><span class="k">C</span><span>确认循环次数等于 log2(n)</span></button>
+          <button type="button" class="opt" data-key="d" aria-pressed="false"><span class="k">D</span><span>确认 mid 用的是整数除法</span></button>
         </div>
         <div class="fb" aria-live="polite" hidden>
-          <p class="fb-ok">对。这是唯一能在波形上检验的判据：先看电流能不能降下来，再看关断后有没有正向电压把它重新开通。</p>
-          <p class="fb-no">电压过零只是让电流有机会下降，不是判据本身；触发脉冲和触发角都不决定关断。</p>
+          <p class="fb-ok">对。区间必须严格变小（否则死循环），被排除的元素必须真的不可能含答案（否则漏解）。两条都成立，二分就成立。</p>
+          <p class="fb-no">跑几组数据只能证明这几组对。要看的是不变量：区间变小 + 排除正确。</p>
         </div>
         <div class="q-foot">
-          <details class="why"><summary>为什么</summary><p>两个条件都要满足：电流过零回答「能不能关」，之后的正向电压回答「会不会又被开通」。缺一个就会得出错误结论。</p></details>
+          <details class="why"><summary>为什么</summary><p>二分只有两类 bug：区间没变小（死循环）和排除错了（漏解）。对着这两条检查，比跑一百组用例更可靠。</p></details>
           <button type="button" class="ask" hidden>追问这题</button>
         </div>
       </article>
@@ -290,7 +314,7 @@
 
   <section class="card" id="map" aria-labelledby="map-h">
     <div class="card-head"><h2 id="map-h">知识关系图</h2></div>
-    <svg class="map" viewBox="0 0 700 320" role="img" aria-label="知识关系图：本页位于中心，四个相邻知识点分别标注为前置、易混、对照、迁移">
+    <svg class="map" viewBox="0 0 700 320" role="img" aria-label="知识关系图：本页位于中心，相邻知识点分别标注为前置、易混、对照、迁移">
       <line class="edge" x1="350" y1="160" x2="120" y2="46"/>
       <line class="edge" x1="350" y1="160" x2="120" y2="274"/>
       <line class="edge" x1="350" y1="160" x2="575" y2="46"/>
@@ -301,29 +325,29 @@
       <text class="edge-lb" x="492" y="102" text-anchor="middle">对照</text>
       <text class="edge-lb" x="492" y="224" text-anchor="middle">迁移</text>
 
-      <a class="node" href="./R02-晶闸管关断条件与换流.html">
+      <a class="node" href="./R02-example-prerequisite.html">
         <rect x="20" y="20" width="200" height="52"/>
-        <text x="120" y="44" text-anchor="middle">晶闸管关断条件与换流</text>
-        <text class="sub2" x="120" y="61" text-anchor="middle">R02 · 断链点</text>
+        <text x="120" y="44" text-anchor="middle">循环不变式</text>
+        <text class="sub2" x="120" y="61" text-anchor="middle">R02 · 前置（占位）</text>
       </a>
-      <a class="node" href="./R03-负载性质决定整流波形.html">
+      <g class="node node-todo">
         <rect x="20" y="248" width="200" height="52"/>
-        <text x="120" y="272" text-anchor="middle">负载性质决定整流波形</text>
-        <text class="sub2" x="120" y="289" text-anchor="middle">R03 · 一次通过</text>
-      </a>
-      <a class="node" href="./R04-buck-拓扑与ccm-dcm边界.html">
+        <text x="120" y="272" text-anchor="middle">线性查找</text>
+        <text class="sub2" x="120" y="289" text-anchor="middle">待建 · 易混</text>
+      </g>
+      <a class="node" href="./R03-example-contrast.html">
         <rect x="470" y="20" width="210" height="52"/>
-        <text x="575" y="44" text-anchor="middle">BUCK 拓扑与 CCM/DCM 边界</text>
-        <text class="sub2" x="575" y="61" text-anchor="middle">R04 · not-learned</text>
+        <text x="575" y="44" text-anchor="middle">插入位置</text>
+        <text class="sub2" x="575" y="61" text-anchor="middle">R03 · 对照（占位）</text>
       </a>
       <g class="node node-todo">
         <rect x="470" y="248" width="210" height="52"/>
-        <text x="575" y="272" text-anchor="middle">整流波形与器件应力</text>
-        <text class="sub2" x="575" y="289" text-anchor="middle">待建 · 分析底座第 2 条</text>
+        <text x="575" y="272" text-anchor="middle">旋转数组查找</text>
+        <text class="sub2" x="575" y="289" text-anchor="middle">待建 · 迁移</text>
       </g>
       <g class="node node-self">
         <rect x="240" y="134" width="220" height="52"/>
-        <text x="350" y="158" text-anchor="middle">停止触发不是新稳态</text>
+        <text x="350" y="158" text-anchor="middle">二分查找的区间定义</text>
         <text class="sub2" x="350" y="175" text-anchor="middle">本页 R01</text>
       </g>
     </svg>
@@ -332,19 +356,19 @@
   <section class="card" id="links" aria-labelledby="links-h">
     <div class="card-head"><h2 id="links-h">相关文件</h2></div>
     <ul class="links">
-      <li><a href="../notes/N01-停止触发不是新稳态.md">笔记原文 N01</a><span>给助手读的状态记录：结论、错因、关系、上次结果</span></li>
-      <li><a href="./R02-晶闸管关断条件与换流.html">R02 晶闸管关断条件与换流</a><span>前置，断链点，优先补</span></li>
-      <li><a href="./R03-负载性质决定整流波形.html">R03 负载性质决定整流波形</a><span>易混：电压过零只对电阻负载成立</span></li>
-      <li><a href="../explain/E01-buck-电路图与工作原理.html">E01 BUCK 电路图与工作原理</a><span>讲解页，一次性的图解</span></li>
+      <li><a href="../notes/N01-example-point.md">笔记原文 N01</a><span>给助手读的状态记录：结论、错因、关系、上次结果（占位文件名）</span></li>
+      <li><a href="./R02-example-prerequisite.html">R02 循环不变式</a><span>前置（占位页面）</span></li>
+      <li><a href="./R03-example-contrast.html">R03 插入位置</a><span>对照（占位页面）</span></li>
+      <li><a href="../explain/E01-example-page.html">E01 示例讲解页</a><span>一次性图解（占位页面）</span></li>
       <li><a href="../../INDEX.md">INDEX.md</a><span>本文件夹的目录与状态表</span></li>
     </ul>
   </section>
 
   <p class="foot">
     本页是单文件、离线可用的复习页：进度只存在本机浏览器的 localStorage 里，不会上传，也不会自动发送任何消息。<br>
-    题目全部是选择题；点选项立即本地判定，连续两次答对即移出错题池。想让我出变式题时，用「复制复习指令」把结果带回去。
+    题目全部是选择题；点选项立即本地判定，连续两次答对即移出错题池。想让我出变式题时，用「复制复习指令」把结果带回去。<br>
+    这是示例模板：知识点、题目与文件名都是占位，复制后请整体替换，并保留 main 上的 data-key / data-code / data-title 三个属性。
   </p>
-
 </main>
 
 <script>
