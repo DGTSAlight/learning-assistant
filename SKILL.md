@@ -118,7 +118,9 @@ Missing capabilities reduce presentation richness, never content or honesty:
 
 - No visual rendering tool → plain Markdown, fenced code, tables, LaTeX.
 - No matplotlib in the default interpreter → check other interpreters and conda environments
-  before concluding it is missing, then ask whether to draw an SVG sketch or install it.
+  before concluding it is missing. Before the first figure, offer to save the working
+  interpreter as the project default; if none works, ask whether to draw an SVG sketch or
+  install it.
 - No image embedding → produce the file anyway and give its path. A table of attributes is
   never a substitute for a required circuit diagram or waveform.
 - No inline-card support → describe the choice in text, still ask for a one-line reason, and

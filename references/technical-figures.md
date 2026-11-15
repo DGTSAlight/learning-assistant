@@ -81,10 +81,25 @@ Do not test only the interpreter bundled with the agent. Check in this order:
 5. For each candidate run `<python> -c "import matplotlib; print(matplotlib.__version__)"`.
    Use the first one that succeeds and record the interpreter path actually used.
 
-If none has matplotlib, **ask the user before falling back**. State which interpreters were
-checked, ask whether they want to name a specific interpreter (a conda environment name is a
-common answer), and offer two options: draw an SVG sketch instead (recommended when only the
-shape matters), or install matplotlib into an existing environment with
+**Ask once, before the first figure of a project.** Probing works, but it costs a turn in every
+session, and the user usually already knows the answer. The first time a figure is needed, run
+the probe above, then ask one short question: whether to save the interpreter you found as the
+default for this project. Name the exact path and version, so the answer is a yes or a no rather
+than a research task.
+
+- **Yes** → write one line into the notes-root `INDEX.md` (create the file if it does not exist
+  yet): `- 绘图解释器：<absolute path>（<date> 由用户指定）`. Read that line first in later
+  sessions and skip the probe. If the path has disappeared, say so and fall back to probing.
+- **No** → use the interpreter found for this session and probe again next time. Do not ask
+  again in the same session, and never ask when no figure is being drawn.
+- Several candidates have matplotlib → list them one per line with their versions and let the
+  user choose, instead of picking silently.
+- No candidate has matplotlib → the question becomes "do you have an interpreter path I should
+  use", followed by the fallback options below.
+
+If none has matplotlib and the user names no path, **ask the user before falling back**. State
+which interpreters were checked, and offer two options: draw an SVG sketch instead (recommended
+when only the shape matters), or install matplotlib into an existing environment with
 `<python> -m pip install matplotlib` and then plot. Never install a package without the user's
 agreement, and never claim matplotlib was unavailable without running the checks above.
 
