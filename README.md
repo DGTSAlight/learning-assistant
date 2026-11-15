@@ -38,12 +38,15 @@ worthless.
 
 | Your situation | Something you can say |
 | --- | --- |
-| Exam in a few days, too much material | "期末速成，三天，只求过线" |
-| You studied it, it never clicked | "这块我没真懂，一考试就错" |
-| Reading code you did not write | "逐行讲讲这段代码在干什么" |
-| You do not know where to start | "我想学 X，但不知道从哪下手" |
-| You want to know what you forgot | "帮我复习一下 X，看我忘了多少" |
-| A concept keeps biting you | "用你的方式给我讲一下 X" |
+| Exam in a few days, too much material | "Cram for the final in three days — I only need to pass" |
+| You studied it, it never clicked | "I never really got this; I get it wrong on every exam" |
+| Reading code you did not write | "Walk me through this code line by line" |
+| You do not know where to start | "I want to learn X but I don't know where to begin" |
+| You want to know what you forgot | "Quiz me on X and see how much I have lost" |
+| A concept keeps biting you | "Explain X the way you would teach it, not a one-off answer" |
+
+These are examples, not commands. There is no special syntax to learn, and the skill answers in
+whatever language you write in.
 
 ## When it will not help
 
@@ -93,7 +96,8 @@ the verdict and your reasoning, and two fixed options sit apart from the answers
 - `难度太高，需要大幅降低难度` (too hard — lower the difficulty)
 - `难度太低，可以快速提升难度` (too easy — raise the difficulty)
 
-These two send immediately and are never graded.
+These two labels are fixed in Chinese by the card contract, so they stay as written; the gloss is
+for readers. Both send immediately and are never graded.
 
 ### Explainer pages, when prose is the wrong shape
 
@@ -233,3 +237,7 @@ alone can run a session, and a domain file only adds scope, order, and checks.
   directory, and the skill keeps no state of its own.
 - **Nothing is uploaded.** Review pages are local files; the skill has no network behaviour of
   its own beyond the searches you can see it run.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
