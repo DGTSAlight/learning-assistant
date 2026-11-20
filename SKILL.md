@@ -1,6 +1,6 @@
 ---
 name: learning-assistant
-description: This skill should be used for task-driven learning guidance. It diagnoses shallow knowledge, sets one verifiable goal at the wanted depth, fills only the gaps that goal needs, verifies through tasks and questions, and leaves short linked notes. Use it when the learner wants to be taught, quizzed, drilled, or crammed for an exam, says they never really understood something, asks to walk through code line by line, wants a learning goal set, or explicitly asks this skill to explain one concept. Triggers include teach me, help me learn, quiz me, cram for the exam, walk me through this code, 教我, 带我学, 考考我, 期末速成, 这块我没真懂, 逐行讲讲, 我想学 X. Do not use it for one-off questions such as what is X or explain X without such a request, for pure task execution like fixing a bug, running tests, generating a file, or looking up an API when there is no learning intent, or when the user asks for the answer only. Domain references exist for code, math, power electronics, and sensors; other subjects use the general layer.
+description: Use this skill for task-driven learning guidance: diagnose shallow knowledge, set one verifiable goal at the wanted depth, fill only the gaps that goal needs, verify through tasks and questions, and leave short linked notes. Use it when the learner wants to be taught, quizzed, drilled, or crammed for an exam, asks to review a whole subject, says they never really understood something, asks to walk through code line by line, wants a learning goal set, or explicitly asks this skill to explain one concept. Triggers include teach me, quiz me, cram for the exam, review my course, walk me through this code, 教我, 考考我, 期末速成, 全面复习, 系统复习, 串一遍, 这块我没真懂, 逐行讲讲, 我想学 X. Do not use it for one-off questions (what is X, explain X) without such a request, for code or pull-request review, for pure task execution (fix a bug, run tests, generate a file, look up an API) without learning intent, or when the user asks for the answer only. Domain references: code, math, power electronics, sensors; others use the general layer.
 agent_created: true
 metadata:
   version: "0.1.0"
@@ -51,12 +51,12 @@ domain file only adds scope, order, and checks. Decide from what the user actual
 
 | User intent | Action |
 | --- | --- |
-| Wants to learn or understand programming, a language, an algorithm's implementation, or code they wrote | Read `references/code-learning.md` |
+| Wants to learn or understand programming, a language, an algorithm's implementation, or code they wrote | Read `references/domains/code-learning.md` |
 | Wants code written, fixed, refactored, tested, or explained as a one-off, with no learning intent | Do not read it; handle the task normally |
 | Mentions code but the intent is ambiguous | Ask one short question: "Do you want this done, or do you want to understand how it works?" Then decide |
-| Wants to learn mathematics (analysis, linear algebra) | Read `references/mathematics.md` |
-| Wants to learn power electronics | Read `references/power-electronics.md` |
-| Wants to learn sensors or measurement | Read `references/sensors.md` |
+| Wants to learn mathematics (analysis, linear algebra) | Read `references/domains/mathematics.md` |
+| Wants to learn power electronics | Read `references/domains/power-electronics.md` |
+| Wants to learn sensors or measurement | Read `references/domains/sensors.md` |
 | Any other subject | Use the general layer; do not invent domain rules |
 
 Read at most one domain file unless the goal genuinely spans two. For a domain file that
@@ -89,13 +89,13 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | File | Read when |
 | --- | --- |
 | `references/general-learning.md` | Always, once the skill activates |
-| `references/code-learning.md` | Only when the selection table above says so |
-| `references/mathematics.md` | Only when the selection table above says so |
-| `references/power-electronics.md` | Only when the selection table above says so |
-| `references/sensors.md` | Only when the selection table above says so |
-| `references/presentation.md` | When deciding how to present an explanation, diagram, or interactive card |
-| `references/technical-figures.md` | When an explanation needs a circuit diagram, waveform, characteristic curve, or other technical figure |
-| `references/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
+| `references/domains/code-learning.md` | Only when the selection table above says so |
+| `references/domains/mathematics.md` | Only when the selection table above says so |
+| `references/domains/power-electronics.md` | Only when the selection table above says so |
+| `references/domains/sensors.md` | Only when the selection table above says so |
+| `references/artifacts/presentation.md` | When deciding how to present an explanation, diagram, or interactive card |
+| `references/artifacts/technical-figures.md` | When an explanation needs a circuit diagram, waveform, characteristic curve, or other technical figure |
+| `references/artifacts/knowledge-network.md` | When a task starts or a stage ends, and when generating or updating notes |
 | `references/gates.md` | At a stage end, or when deciding whether to enable hard checks |
 | `scripts/check-gates.mjs` | Optional deterministic check at a stage end |
 | `assets/inline-card-basic.html` | Need a domain-neutral single-choice card example |
@@ -109,8 +109,9 @@ in `references/gates.md`. A missing gate mechanism never interrupts the session.
 | `scripts/draw-waveform-example.py` | Need a runnable, dependency-free script that emits a waveform SVG |
 | `evals/trigger-queries.json` | Reviewing or regenerating trigger tests |
 
-Keep references one level deep: each file is self-contained and does not point to another
-reference. This file is the only index.
+`references/` is split by purpose: `domains/` holds subject scope, `artifacts/` holds what a
+session produces — pages, figures, notes. Each file is self-contained and does not point to
+another reference; this file is the only index.
 
 ## Degradation
 

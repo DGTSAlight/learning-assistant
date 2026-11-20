@@ -168,22 +168,18 @@ cp -r learning-assistant ~/.workbuddy/skills/
 ```
 learning-assistant/
 ├── SKILL.md                          元数据、核心循环、选择判定表、资源索引
+├── LICENSE                           MIT
 ├── references/
 │   ├── general-learning.md           通用规则（每次激活都会读）
-│   ├── code-learning.md              代码领域（仅判定时读）
-│   ├── mathematics.md                数学领域
-│   ├── power-electronics.md          电力电子技术领域
-│   ├── sensors.md                    传感器与检测领域
-│   ├── presentation.md               讲解页、内联卡片、公式写法
-│   ├── technical-figures.md          何时必须有图，以及怎么出图
-│   ├── knowledge-network.md          笔记、复习页、可选的笔记工具
-│   └── gates.md                      可选的硬门禁
+│   ├── gates.md                      可选的硬门禁
+│   ├── domains/                      学科范围：代码、数学、电力电子、传感器
+│   └── artifacts/                    会话产出物：讲解页、技术图像、笔记与复习页
 ├── assets/                           示例：题目卡片、复习页、波形图
 ├── scripts/                          可运行的波形脚本与可选门禁检查
 └── evals/                            25 个触发用例 / 50 条查询，中英双语
 ```
 
-`SKILL.md` 是唯一索引；各 reference 自包含、互不引用，文件引用始终只有一层。领域文件是可选的——只有通用层也能跑完一次会话，领域文件只是补上范围、顺序和判断标准。
+`SKILL.md` 是唯一索引；各 reference 自包含、互不引用。领域文件是可选的——只有通用层也能跑完一次会话，领域文件只是补上范围、顺序和判断标准。
 
 ## 适用范围与限制
 

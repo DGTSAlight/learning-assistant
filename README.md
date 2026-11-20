@@ -208,23 +208,21 @@ All are enhancements with a plain-Markdown fallback; none is required.
 ```
 learning-assistant/
 ├── SKILL.md                          metadata, core loop, selection table, resource index
+├── LICENSE                           MIT
 ├── references/
 │   ├── general-learning.md           domain-independent rules (always read)
-│   ├── code-learning.md              code domain (read only when selected)
-│   ├── mathematics.md                mathematics domain
-│   ├── power-electronics.md          power electronics domain
-│   ├── sensors.md                    sensors and measurement domain
-│   ├── presentation.md               explainers, inline cards, math notation
-│   ├── technical-figures.md          when a figure is required, and how to produce it
-│   ├── knowledge-network.md          notes, review pages, optional vault
-│   └── gates.md                      optional hard checks
+│   ├── gates.md                      optional hard checks
+│   ├── domains/                      subject scope: code, mathematics,
+│   │                                 power electronics, sensors
+│   └── artifacts/                    what a session produces:
+│                                     presentation, technical figures, notes and review pages
 ├── assets/                           worked examples: question cards, a review page, a waveform
 ├── scripts/                          a runnable waveform script and an optional gate check
 └── evals/                            25 trigger cases, 50 queries, Chinese and English
 ```
 
-`SKILL.md` is the only index; reference files are self-contained and do not reference each other,
-so file references stay one level deep. The domain references are optional — the general layer
+`SKILL.md` is the only index; reference files are self-contained and do not reference each
+other. The domain references are optional — the general layer
 alone can run a session, and a domain file only adds scope, order, and checks.
 
 ## Scope and limits

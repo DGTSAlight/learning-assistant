@@ -24,6 +24,26 @@ template by hand, **not** with the page renderer: it needs local judgement, a wr
 pool, and stored progress, and a generated explainer page has none of those. An explainer page
 explains once; a review page is used repeatedly.
 
+### A host drawing widget is not a page
+
+Many hosts can draw an SVG, a diagram, or a small chart inline — a `show_widget`-style tool, or a
+"render this HTML" preview. That is a **one-turn sketch**: it lives inside the message, scrolls
+away, disappears when the conversation is compacted, cannot be opened from disk, and cannot be
+linked from a note or a review page.
+
+Use one only when all three hold: the picture is a small aside, nothing durable was asked for, and
+no learning task is in progress. Otherwise produce a standalone HTML file.
+
+| Content | Lifetime it needs | What to use |
+| --- | --- | --- |
+| A quick sketch inside one explanation, no case split | this turn | the host's inline widget is fine |
+| Cases, branches, a waveform, a circuit, or three linked concepts | the user will re-read it | standalone HTML page |
+| Anything a note or review page will link to | permanent, on disk | standalone HTML page |
+
+Once a learning task is running — a goal was set, notes exist — the default is a **standalone
+page**, not an inline sketch. The user paid for a session; the artefact should outlive it. Do not
+choose the inline widget because it is one call away.
+
 ### When a page is the default, not an option
 
 Generate a page proactively when **any one** of these signals is present. One signal is enough.
@@ -112,6 +132,13 @@ body and the tables is not. This is a draft-writing error, not a renderer bug.
   the same card.
 - Bind events with `addEventListener`, not inline `onclick` attributes — some hosts block
   inline handlers via CSP.
+- **Never find the card with `document.currentScript`.** In several inline renderers it returns
+  `null`; the first line then throws, every listener below it is never bound, and the result is a
+  card that looks perfect and has only dead buttons. Give the wrapper an `id` and locate it with
+  `document.getElementById('…')`, or bind in bulk with `querySelectorAll('.some-class')`. If the
+  script needs its own container, pass the id in as a constant instead of discovering it.
+- **Do not build the card's script around a single top-level statement.** Wrap the whole script in
+  an IIFE and bind each control in its own loop, so one missing element cannot kill the rest.
 - Local judgements (right/wrong, toggles, small calculations) happen inside the card; do not
   send a chat message just to evaluate a click.
 - The worked examples are standalone HTML documents. An inline card is a fragment: strip the

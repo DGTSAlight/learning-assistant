@@ -198,6 +198,26 @@ Keep that order. A page with a quiz and no recap is a test, not a review page.
 - Reload: mastered questions stay mastered, and nothing throws when storage is blocked.
 - Look at it in both themes. Unreadable dark mode counts as broken.
 
+## Where a page is written, and when
+
+A page is created **in its final location, at the moment it is made**. Not in a temporary
+directory that will be tidied up later, and not "after the round finishes".
+
+| Artefact | Final path |
+| --- | --- |
+| Explainer page | `<notes root>/<CODE>-<subject>/explain/E01-<subject>.html` |
+| Review page | `<notes root>/<CODE>-<subject>/review/R01-<point>.html` |
+| Figure | `<notes root>/<CODE>-<subject>/figures/…` |
+
+Never stage a page in `.tmp/`, `tmp/`, a cache directory, or the current working directory and
+plan to move it later. A file in a temp directory is a file the user will not find: the path
+scrolls out of the conversation, the directory may be cleaned without warning, and nothing links
+to it. The intent to file it properly later does not survive the end of the session.
+
+If the notes root does not exist yet, create the folder (or ask once where notes should live)
+**before** writing the page — not afterwards. Say the path out loud when you hand the page over,
+so the user knows where it went.
+
 ## Offering and setting up Obsidian
 
 Obsidian is **off by default**. Ask about it at exactly two moments:

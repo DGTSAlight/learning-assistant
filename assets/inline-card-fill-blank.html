@@ -63,6 +63,8 @@
   <p class="hint" id="hint"></p>
 </div>
 <script>
+// Controls are found by id or class on purpose. Never use document.currentScript here:/n// it returns null in some inline renderers, the first line throws, and every button
+// below it ends up unbound - the card renders fine and nothing is clickable.
 (function () {
   var question = document.getElementById('q').textContent.trim();
   var answer = document.getElementById('answer');
