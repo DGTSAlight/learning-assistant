@@ -154,6 +154,8 @@ cp -r learning-assistant ~/.workbuddy/skills/
 
 然后新开一个会话，Skill 才会出现在可用技能列表里。
 
+**如果内置技能总是抢先。** 宿主的加载优先级是：项目级 > 用户级 > 内置。当宿主的可视化 / 图表助手总是抢走本该由本 Skill 处理的任务时，把本 Skill 装到**项目级**目录（`.workbuddy/skills/`、`.claude/skills/` 等），而不是用户级——项目级才是压过内置的那一档。
+
 ## 可选工具
 
 全部都是增强项，都有纯 Markdown 降级路径，不是必需。

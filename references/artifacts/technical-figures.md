@@ -65,6 +65,19 @@ Why this order: a hand-drawn complex bridge takes a long time, is easy to get wr
 device level, and still lacks textbook detail; a sourced figure is faster and more reliable. A
 hand-drawn function curve cannot be numerically accurate, so a real plotting library wins there.
 
+### Circuits: search before you draw
+
+Draw a circuit yourself only when all three hold:
+
+- four devices or fewer, and no bridge arm;
+- the point is the connection itself, not how a device behaves over time;
+- no textbook figure plausibly exists for this exact topology.
+
+If any of them is false — a bridge, a transformer, gate drives, any converter topology — search
+for a sourced figure first. A hand-drawn bridge is slow, gets device labels and current paths
+wrong, and does not look like the figure the learner will be examined on. Being able to draw it is
+not a reason to draw it.
+
 ### 3.1 Finding a Python that has matplotlib
 
 Do not test only the interpreter bundled with the agent. Check in this order:

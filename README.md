@@ -188,6 +188,12 @@ DSH can also install a skill as a plugin with `dsh plugin add`.
 
 Start a new session so the skill appears in the available-skills list.
 
+**If a built-in skill keeps winning.** Hosts load project-level skills ahead of user-level ones,
+and both ahead of their own built-in skills. When a built-in visualization or diagram helper keeps
+taking over work this skill should handle, install it at the **project level**
+(`.workbuddy/skills/`, `.claude/skills/`, …) rather than the user level — that is the slot that
+outranks the built-in one.
+
 ## Optional tools
 
 All are enhancements with a plain-Markdown fallback; none is required.

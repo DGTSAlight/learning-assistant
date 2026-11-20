@@ -20,6 +20,25 @@ do not walk a syllabus from chapter one, and do not add knowledge that the curre
 not need. Depth comes from real understanding plus a reusable knowledge network, not from
 lecturing more.
 
+## Arbitration with host tools
+
+Hosts ship their own drawing helpers — a visualization guide, an inline SVG widget, a chart tool —
+and some of them load automatically the moment a message mentions a diagram. They are competent at
+what they do, but they produce **one-turn artefacts**: a picture inside the reply that scrolls
+away, cannot be reopened from disk, and cannot be linked from a note.
+
+While a learning task is running, this skill's decision wins for anything the learner will re-read:
+
+| Situation | What wins |
+| --- | --- |
+| An explanation needs a figure the learner will study again | one standalone HTML page holding the figure **and** the prose |
+| A circuit, waveform, or characteristic curve | the technical-figure route — not a hand-drawn SVG, not a chart widget |
+| A throwaway sketch inside a single reply, nothing durable asked for | the host widget is fine |
+
+A visualization guide that loads mid-conversation is an available tool, not a new policy. It does
+not override the choice above. If you follow it anyway for something durable, say plainly that the
+result will not survive the session.
+
 ## Core loop
 
 1. **Set the goal** — agree on one verifiable outcome and a depth tier before teaching.
@@ -35,6 +54,16 @@ lecturing more.
 
 The loop repeats per knowledge point. Rules for each step live in `references/general-learning.md`.
 An explicit one-off explanation request uses the short version described in the guard below.
+
+Two shapes are defaults once a session is running, not options to be weighed:
+
+- **A question to the learner is a card.** One question or five, it arrives as a card: answer
+  controls, a reason box, a local verdict, one confirm. A numbered list of questions in prose is
+  the failure mode, and it appears exactly when the card feels like overhead. It is not overhead —
+  it is the only form the user can answer without retyping the question.
+- **An explanation that needs a picture is a page.** The reply keeps the conclusion; the figure
+  and the prose that reads it go into one page, in reading order. Never post an image after the
+  paragraph and describe it above.
 
 ## Offering the optional note tool
 

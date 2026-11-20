@@ -5,6 +5,9 @@ Self-contained rules for how an explanation is shown. These are means, not the c
 
 ## Priority order
 
+**Step 0, before choosing anything:** will the learner reopen this artefact? If yes, it is a page —
+rule 1 — whatever the host happens to offer. If no, any of the three is acceptable.
+
 1. **Graphical content** — when the explanation contains parts that relate, branch, change
    over time, or depend on a condition, **produce** a single-page HTML explainer via the
    `answer-me-with-html` skill. Do not wait for the user to ask for a diagram, and do not
@@ -75,6 +78,18 @@ boundary ... on the other", or any list of conditions, render it as a flow, comp
 or timeline with **one panel per case**, then state the conclusion in the reply body. A single
 paragraph that mixes several mechanisms and several cases without showing which statement
 belongs to which case is the failure mode to avoid.
+
+### A figure next to prose belongs in a page
+
+Do not post an image after a paragraph and describe it above. The reader scrolls between the
+picture and the sentence that refers to it, and on a narrow screen it is worse. When an
+explanation needs both, they go into one page: the figure with its labels, then the prose that
+reads it, in that order. A figure floating at the end of a chat message is not a figure — it is a
+tab the reader has to keep switching to.
+
+Formulas are the same problem in another form. Chat renders plain text, so `U_d = 0.9 U_2 cos α`
+arrives as characters with a visible underscore, not as a formula. If the explanation turns on a
+formula, that is a second, independent reason to produce the page — the page typesets it.
 
 ### A table is not a figure
 
