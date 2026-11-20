@@ -25,13 +25,22 @@ adds domain scope, order, and checks.
 ## 2. Textbook and scope
 
 Default textbook: 《电力电子技术》刘进军、王兆安 主编，第 6 版，机械工业出版社，2022.6
-（2025.1 重印），ISBN 978-7-111-70337-2.
+（2025.1 重印），ISBN 978-7-111-70337-2. The textbook is a fallback for chapter names and
+figure numbering — ask which edition the learner has before citing anything.
 
-The learner's copy carries hand marks on the table of contents: crosses, question marks,
-ticks, and notes such as 掌握 / 概念 / 了解 / 不考 / 没考过. **Treat these as hints, not an
-official syllabus** — confirm with the learner before excluding anything.
+**The scope comes from the learner, not from this file.** Exam scope differs by school, by
+teacher, and by year. Ask for it. If the learner has marks on their table of contents (crosses,
+question marks, notes such as 掌握 / 概念 / 了解 / 不考 / 没考过), take those as the working scope,
+read them back for confirmation, and only then exclude anything.
 
-Frequently marked as excluded or light (verify before relying on it):
+### Sample marks (one copy, unverified — offer only on request)
+
+The lists below come from a single copy of the textbook above. They are **not** a syllabus, not
+this course's scope, and not evidence about anyone else's course. Do not volunteer them. Mention
+them only when the learner asks for a default scope, or has no goal or scope of their own and
+needs somewhere to start — and say plainly that they are one copy's marks and need confirming.
+
+Light or excluded on that copy:
 
 - 2.5 其他全控型器件, 2.6 功率集成电路, 2.7 宽禁带器件
 - 3.3.3 电容滤波电路的谐波分析, 3.4.2 多重化整流电路, 3.6 相位控制的实现
@@ -41,7 +50,7 @@ Frequently marked as excluded or light (verify before relying on it):
 - 9.1.4 宽禁带器件驱动, 9.2.3 缓冲电路, 9.3.4 并联使用
 - 第 10 章 电力电子技术的应用
 
-Frequently marked as key (verify):
+Marked as key on that copy:
 
 - 3.4 大功率可控整流, 5.1 降压/升压斩波, 5.2.1/5.2.2 正激/反激,
   5.3.1 非隔离双向, 6.1 交流调压, 7.1/7.2 PWM 原理, 9.1 器件驱动, 9.3 串并联使用
@@ -116,7 +125,7 @@ Use multiple choice only for quick recall of device symbols and parameter names.
 
 ## 7. Simulation
 
-Simulink is part of the course. Separate two abilities:
+If the course includes simulation, separate two abilities:
 
 - computing gain and stresses by hand;
 - building the model, choosing solver and step, and reading the scope correctly.

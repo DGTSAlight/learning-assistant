@@ -25,19 +25,28 @@ this file adds domain scope, order, and checks.
 ## 2. Textbook and scope
 
 Default textbook: 《传感器与检测技术》胡向东 等编著，第 4 版，机械工业出版社，2021.2，
-ISBN 978-7-111-67268-5.
+ISBN 978-7-111-67268-5. The textbook is a fallback for chapter names and figure numbering — ask
+which edition the learner has before citing anything.
 
-The learner's copy carries hand marks on the table of contents: crosses, question marks,
-ticks, and notes such as 掌握 / 概念 / 不考. **Treat these as hints, not an official
-syllabus** — confirm with the learner before excluding anything.
+**The scope comes from the learner, not from this file.** Exam scope differs by school, by
+teacher, and by year. Ask for it. If the learner has marks on their table of contents (crosses,
+question marks, notes such as 掌握 / 概念 / 不考), take those as the working scope, read them back
+for confirmation, and only then exclude anything.
 
-Frequently marked as light or excluded (verify before relying on it):
+### Sample marks (one copy, unverified — offer only on request)
+
+The lists below come from a single copy of the textbook above. They are **not** a syllabus, not
+this course's scope, and not evidence about anyone else's course. Do not volunteer them. Mention
+them only when the learner asks for a default scope, or has no goal or scope of their own and
+needs somewhere to start — and say plainly that they are one copy's marks and need confirming.
+
+Light or excluded on that copy:
 
 - 第 11 章 化学传感器（气体、湿度）
 - 第 12 章 生物传感器
-- parts of 第 10 章 辐射与波式传感器（微波、超声波），depending on the course
+- parts of 第 10 章 辐射与波式传感器（微波、超声波）
 
-Frequently marked as key (verify):
+Marked as key on that copy:
 
 - 第 2 章 基本特性（静态、动态、标定）
 - 第 3 章 电阻式，第 4~6 章 电感式 / 电容式 / 压电式

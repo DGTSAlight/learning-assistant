@@ -77,15 +77,32 @@
   var choice = null;
 
   function deliver(prompt) {
-    if (typeof sendPrompt === 'function') {
-      hint.textContent = 'Sent to the assistant.';
-      sendPrompt(prompt);
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(prompt);
-      hint.textContent = 'Message return is unavailable. Prompt copied to clipboard.';
-    } else {
-      hint.textContent = 'Message return is unavailable. Prompt: ' + prompt;
+    // Three rungs, and every one of them reports what actually happened:
+    // message return, then clipboard, then show the prompt in the card.
+    function showInline(reason) {
+      hint.textContent = reason + ' Select and copy the prompt: ' + prompt;
+      hint.style.userSelect = 'all';
     }
+    if (typeof sendPrompt === 'function') {
+      try {
+        var sent = sendPrompt(prompt);
+        if (sent && typeof sent.then === 'function') {
+          sent.then(function () { hint.textContent = 'Sent to the assistant.'; },
+                    function () { showInline('Sending failed.'); });
+        } else {
+          hint.textContent = 'Sent to the assistant.';
+        }
+        return;
+      } catch (e) { /* treat a throwing sendPrompt as unavailable */ }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(prompt).then(
+        function () { hint.textContent = 'Message return is unavailable. Prompt copied to clipboard.'; },
+        function () { showInline('Clipboard blocked.'); }
+      );
+      return;
+    }
+    showInline('Message return is unavailable.');
   }
 
   opts.forEach(function (b) {
