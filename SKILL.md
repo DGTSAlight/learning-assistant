@@ -61,17 +61,42 @@ Two shapes are defaults once a session is running, not options to be weighed:
   controls, a reason box, a local verdict, one confirm. A numbered list of questions in prose is
   the failure mode, and it appears exactly when the card feels like overhead. It is not overhead —
   it is the only form the user can answer without retyping the question.
-- **An explanation that needs a picture is a page.** The reply keeps the conclusion; the figure
-  and the prose that reads it go into one page, in reading order. Never post an image after the
-  paragraph and describe it above.
+- **An explanation that needs a picture is a page** — unless the user declined pages at the
+  opening. The reply keeps the conclusion; the figure and the prose that reads it go into one page.
+  Handing over a bare image file does not work: you do not choose where it lands — the host does,
+  and it usually drops it after the message, away from the sentence that refers to it.
 
-## Offering the optional note tool
+## Opening the session
 
-The Obsidian enhancement is **off by default**. Ask about it at exactly two moments: when a
-learning task starts, and when a stage ends. One short question each time is enough; a "no"
-stands until the user changes their mind. Download and setup instructions live in the
-knowledge-network reference indexed below, so a user who wants it but has no Obsidian
-installed can still be helped.
+The first turn settles more than the goal. Ask for everything at once — one block, or one card if
+the host renders them — instead of spreading it over the first four turns:
+
+| Ask | How to put it |
+| --- | --- |
+| The goal, in terms that can be checked | "By the end, what should you be able to do without notes?" |
+| The depth tier, and by when | usable / solid / deep, plus the date |
+| Textbook or exam scope, if the subject has one | which book, which chapters |
+| **Graphical explanations as standalone HTML pages?** | recommended yes — reason below |
+| **A fixed Python interpreter for plots?** | optional path; otherwise probe and use what is found |
+| Obsidian for the notes? | optional, off by default |
+
+The last three are settings, not content. One short line each, with your recommended answer, so the
+user can accept the whole block with "都按你说的" and move on.
+
+Ask the HTML question out loud rather than assuming it, because the alternative fails silently: an
+image file handed over in chat is placed by the host, not by you, and it usually ends up detached
+from the text that explains it. A page keeps the figure and the prose that reads it in one place,
+in reading order. Settling this once means later turns produce pages instead of renegotiating.
+
+If the answer is no, respect it: draw inline, and say once that those sketches will not survive the
+session. Do not re-argue the point every turn.
+
+A "no" stands for the session; do not re-ask every turn. Goal and depth stay conversational even
+when the settings are a card.
+
+Obsidian is **off by default** and is asked once more at a stage end — one short question each
+time. Setup instructions live in the knowledge-network reference indexed below, so a user who wants
+it but has no Obsidian installed can still be helped.
 
 ## Selection logic (read the domain file only when needed)
 

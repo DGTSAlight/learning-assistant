@@ -94,11 +94,12 @@ Do not test only the interpreter bundled with the agent. Check in this order:
 5. For each candidate run `<python> -c "import matplotlib; print(matplotlib.__version__)"`.
    Use the first one that succeeds and record the interpreter path actually used.
 
-**Ask once, before the first figure of a project.** Probing works, but it costs a turn in every
-session, and the user usually already knows the answer. The first time a figure is needed, run
-the probe above, then ask one short question: whether to save the interpreter you found as the
-default for this project. Name the exact path and version, so the answer is a yes or a no rather
-than a research task.
+**Ask at the session's opening, not mid-explanation.** Probing works, but it costs a turn in every
+session, and the user usually already knows the answer. When the session opens — or at the first
+figure, if the session is already running — run the probe above, then ask one short question:
+whether to fix an interpreter for this project. Name the exact path and version, so the answer is a
+yes or a no rather than a research task. Asking between two paragraphs of an explanation is the
+worst moment: it interrupts the teaching to talk about tooling.
 
 - **Yes** → write one line into the notes-root `INDEX.md` (create the file if it does not exist
   yet): `- 绘图解释器：<absolute path>（<date> 由用户指定）`. Read that line first in later

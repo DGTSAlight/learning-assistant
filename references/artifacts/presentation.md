@@ -79,13 +79,15 @@ or timeline with **one panel per case**, then state the conclusion in the reply 
 paragraph that mixes several mechanisms and several cases without showing which statement
 belongs to which case is the failure mode to avoid.
 
-### A figure next to prose belongs in a page
+### A bare image file is not a figure in an explanation
 
-Do not post an image after a paragraph and describe it above. The reader scrolls between the
-picture and the sentence that refers to it, and on a narrow screen it is worse. When an
-explanation needs both, they go into one page: the figure with its labels, then the prose that
-reads it, in that order. A figure floating at the end of a chat message is not a figure — it is a
-tab the reader has to keep switching to.
+You do not control where an image lands. Hand over a file and the host decides — in practice it
+renders the image after the message, detached from the paragraph that refers to it. The reader then
+scrolls between the picture and the sentence, and on a narrow screen it is worse. Asking the host
+to place it better does not work, and neither does describing the figure above it.
+
+So when an explanation needs both, the only reliable form is one page: the figure with its labels,
+then the prose that reads it, in reading order. Produce the page instead of the image.
 
 Formulas are the same problem in another form. Chat renders plain text, so `U_d = 0.9 U_2 cos α`
 arrives as characters with a visible underscore, not as a formula. If the explanation turns on a

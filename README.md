@@ -65,7 +65,12 @@ Just say what you want to learn and why. The first reply will usually ask for:
 1. the goal, in terms you can check;
 2. how deep you need to go, and by when;
 3. whether there is a textbook or an exam scope to follow;
-4. once, whether you want Obsidian for the notes (optional, off by default).
+4. whether graphical explanations should go to **standalone HTML pages** (recommended: an image
+   dropped into chat is placed by the host, usually away from the text that explains it);
+5. whether to fix a **Python interpreter** for plots (optional);
+6. once, whether you want Obsidian for the notes (optional, off by default).
+
+Items 4–6 are settings, so you can accept the lot with one sentence and get on with the learning.
 
 Then it starts asking you questions. Answering "I don't know" is useful information, not a
 failure — a blank is recorded as evidence, never filled in for you.
